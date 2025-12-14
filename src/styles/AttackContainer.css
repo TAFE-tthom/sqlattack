@@ -1,0 +1,164 @@
+.sqlattackContainer {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  flex: 1;
+  background-color: #0f101b;
+  overflow: hidden;
+}
+
+.sqlattackStack {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  flex: 1;
+  background-color: #0f101b;
+  overflow: hidden;
+}
+
+.taskSelectNav {
+  flex: 1;
+  background-color: #1a1b26;
+  padding-left: 0.25rem;
+  padding-right: 0.3rem;
+  min-width: 120px;
+  border-right: 1px solid #3a3b46;
+}
+
+.taskSelectNavList {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  max-height: 1300px;
+
+}
+
+.taskListTitle {
+  color: #dddddd;
+  border-bottom: 1px solid #3a3b46;
+  margin-bottom: 0.5em;
+}
+
+.taskSelectNavItem {
+  display: flex;
+  list-style: none;
+  text-align: left;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  height: 3em;
+  border: 1px solid #555975;
+  border-radius: 5px;
+  margin-top: 0.2em;
+  background-color: #272834;
+}
+
+.taskSelectNavItemChosen {
+  display: flex;
+  list-style: none;
+  text-align: left;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  height: 3em;
+  border: 1px solid #885975;
+  border-radius: 5px;
+  margin-top: 0.2em;
+  background-color: #472834;
+}
+
+.taskSelectNavItemCompleted {
+  display: flex;
+  list-style: none;
+  text-align: left;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  height: 3em;
+  border: 1px solid #a87995;
+  border-radius: 5px;
+  margin-top: 0.2em;
+  background-color: #6a4802;
+}
+
+.taskSelectNavItemSoft {
+  display: flex;
+  list-style: none;
+  text-align: left;
+  width: 100%;
+  justify-items: flex-end;
+  justify-content: center;
+  align-items: center;
+  height: 3em;
+  border: 1px solid #555975;
+  border-radius: 5px;
+  margin-top: 0.2em;
+  background-color: #171824;
+}
+
+.taskSelectNavItemSoftChosen {
+  display: flex;
+  list-style: none;
+  text-align: left;
+  width: 100%;
+  justify-items: flex-end;
+  justify-content: center;
+  align-items: center;
+  height: 3em;
+  border: 1px solid #885975;
+  border-radius: 5px;
+  margin-top: 0.2em;
+  background-color: #271824;
+}
+
+.taskSelectNavItemChosen:hover {
+  background-color: #674854;
+  cursor: select;
+}
+
+.taskSelectNavItemCompleted:hover {
+  background-color: #8a6822;
+  cursor: select;
+}
+
+.taskSelectNavItem:hover {
+  background-color: #404560;
+  cursor: select;
+}
+
+.taskSelectNavItemSoft:hover {
+  background-color: #404560;
+  cursor: select;
+}
+
+.sqltaskContainer_NotSelected {
+  display: flex;
+  color: #444444;
+  font-size: 14pt;
+  font-weight: 600;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  flex: 7;
+
+}
+
+.sqlattackTopBar span {
+  flex: 1;
+  color: #babbc6;
+  font-family: 'Monospace';
+  font-weight: 600;
+  font-size: 16pt;
+  justify-items: center;
+  vertical-align: middle;
+}
+
+.sqlattackTopBar {
+  display: flex;
+  width: 100%;
+  height: 2em;
+  border-bottom: 1px solid #3a3b46;
+  background-color: #1a1b26;
+  text-align: center;
+
+}

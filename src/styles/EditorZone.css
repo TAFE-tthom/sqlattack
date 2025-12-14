@@ -1,0 +1,213 @@
+.editorZone {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  flex: 4;
+}
+
+.attackEditor {
+  display: flex;
+  flex-direction: column;
+  border-top: 2px #2a2a2a solid;
+  min-height: 480px;
+  max-height: 480px;
+  flex: 1;
+}
+
+.attackSubmission {
+  display: flex;
+  direction: row;
+}
+
+.attackSubmissionButton {
+  width: 100%;
+  border-radius: 0;
+  border: 1px solid #2a2a2a;
+  max-height: 50px;
+  background-color: #181818;
+  flex: 1;
+}
+
+.attackSubmissionButton:hover {
+  background-color: #282828;
+}
+
+.resultTitle {
+  color: white;
+  display: inline-block;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  width: calc(100% - 1em);
+  text-align: left;
+}
+
+.attackResults {
+  flex: 1;
+  max-height: 200px;
+}
+
+.resultsList {
+  list-style: none;
+  margin-top: 0.75em;
+  margin-bottom: 0.25em;
+  padding: 0;
+
+}
+
+.resultsError {
+  color: red;
+}
+
+.cm-editor {
+  height: calc(100%);
+  min-height: 480px;
+  max-height: 480px;
+  overflow: scroll;
+}
+
+.resultPass {
+  color: white;
+  background-color: #7eae4a;
+  border-radius: 5px;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  margin-left: 0.25em;
+  margin-right: 0.25em;
+  padding-left: 0.5em;
+
+}
+
+.resultFailed {
+
+  color: white;
+  background-color: red;
+  border-radius: 5px;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  margin-left: 0.25em;
+  margin-right: 0.25em;
+  padding-left: 0.5em;
+}
+
+.feedbackDiffBar {
+  font-size: 10pt;
+  background-color: #222222;
+  margin-right: 0.5em;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  border-color: #222222;
+  border-style: solid;
+  border-width: 1px;
+  text-align: left;
+  font-weight: 400;
+  font-family: monospace;
+  display: flex;
+  flex-direction: row;
+}
+
+.feedbackYourOutput {
+  background-color: #333333;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  border-color: #222222;
+  border-style: solid;
+  border-width: 1px;
+  border-bottom: none;
+}
+
+
+.feedbackExpectedOutput {
+  background-color: #333333;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  border-color: #222222;
+  border-style: solid;
+  border-width: 1px;
+  border-bottom: none;
+}
+
+.feedbackDiffView {
+  background-color: #333333;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  border-color: #222222;
+  border-style: solid;
+  border-width: 1px;
+  border-bottom: none;
+  overflow-y: scroll;
+}
+
+.queryOutputSegment {
+  color: white;
+  font-size: 10pt;
+  font-weight: 300;
+  font-family: monospace;
+  text-align: left;
+  background-color: #333333;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  overflow-y: scroll;
+  overflow-x: scroll;
+  max-height: 300px;
+  border-color: #222222;
+  border-style: solid;
+  border-width: 1px;
+  margin: 0;
+}
+
+.outputPanelSelected {
+  background-color: #888888;
+}
+
+.queryOutputTitle {
+  margin-top: 0.25em;
+  text-align: left;
+  color: white;
+  font-size: 10pt;
+  font-weight: 300;
+  font-family: monospace;
+  text-align: left;
+  border-color: #111111;
+  border-style: solid;
+  border-width: 1px;
+}
+
+.resultsQuery {
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+}
+
+.feedbackDiff {
+  flex-direction: column;
+  background-color: #444444;
+  border-color: #222222;
+  border-style: solid;
+  border-width: 1px;
+  font-size: 10pt;
+  font-weight: 300;
+  font-family: monospace;
+  text-align: left;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  overflow-y: scroll;
+  overflow-x: visible;
+  max-height: 300px;
+  margin: 0;
+  margin-right: 0.5em;
+}
+
+.queryYourOutput {
+  margin-top: 1em;
+  background-color: #222222;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  border-color: #222222;
+  border-bottom-color: #171717;
+  border-style: solid;
+  border-width: 1px;
+  text-align: left;
+  font-size: 10pt;
+  font-weight: 300;
+  font-family: monospace;
+  color: white;
+}
