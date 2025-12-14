@@ -16,6 +16,7 @@ export default defineConfig({
   assetsInclude: [
     "node_modules/@sqlite.org/sqlite-wasm/sqlite-wasm/jswasm/sqlite3-opfs-async-proxy.js",
     "node_modules/@sqlite.org/sqlite-wasm/sqlite-wasm/jswasm/sqlite3.js",
+    'node_modules/coi-serviceworker/coi-serviceworker.js'
   ],
   build: {
     rollupOptions: {
@@ -25,7 +26,8 @@ export default defineConfig({
     }
   },
   optimizeDeps: {
-    exclude: ['@sqlite.org/sqlite-wasm/*'],
+    exclude: ['@sqlite.org/sqlite-wasm/*',
+      'coi-serviceworker/*'],
   },
   plugins: [wasm(), topLevelAwait(), preact(), mdPlugin({ mode: [Mode.HTML,
     Mode.MARKDOWN, Mode.TOC] })],
