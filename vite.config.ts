@@ -15,4 +15,5 @@ export default defineConfig({
   },
   plugins: [preact(), mdPlugin({ mode: [Mode.HTML,
     Mode.MARKDOWN, Mode.TOC] })],
+  base: "/sqlattack/"
 })
