@@ -100,7 +100,7 @@ const EvalTaskInitState = function(
  * Public function to construct Evaluation Tests
  */
 export function EvalTests() {
-  const tests = [];
+  const tests: Array<any> = [];
   return EvalInitState(tests);
 }
 
@@ -130,7 +130,7 @@ const NewTaskInit = function(task: any) {
     name: function(name: string) {
       task.name = name;
       return {
-        key: function(key: string) {
+        key: function(_key: string) {
           return {
             scaffold: function(scaffold: string) {
               task.scaffold = scaffold;

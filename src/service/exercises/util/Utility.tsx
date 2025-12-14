@@ -68,7 +68,6 @@ export async function OrderedEntriesEvaluationTest(
 
   const diffData: Array<ReactElement> = [];
   let currentLineBuffer: Array<React.ReactElement> = []
-  let newBuffer = true;
   
   diffChars(respText, epctText)
     .forEach((e) => {

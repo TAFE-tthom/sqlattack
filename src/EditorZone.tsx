@@ -7,6 +7,7 @@ import type { ResultEntry, TaskPackage, TaskSubmissionEvaluator } from './TaskAg
 import type { StorageInstance } from './Storage';
 import './styles/EditorZone.css';
 import type { SqliteProxy } from './SQLiteProxy';
+import { ReactElement } from 'preact/compat';
 
 /**
  * Feedback from evaluator
@@ -39,7 +40,7 @@ export type EditorZoneProps = {
 export type FeedbackProps = {
   test: string
   passed: boolean
-  diffString: string
+  diffString: Array<ReactElement>
   expected: string
   actual: string
 }
