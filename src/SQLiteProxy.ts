@@ -1,5 +1,7 @@
 // @ts-ignore
 import { sqlite3Worker1Promiser } from "@sqlite.org/sqlite-wasm"
+// @ts-ignore
+import sqlite from '@sqlite.org/sqlite-wasm/sqlite-wasm/jswasm/sqlite3.js'
 import type { DatabaseProxy, ResultEntry, ResultRow, TaskEvaluationResult, TaskPackage, TaskSubmissionEvaluator } from './TaskAggregate';
 
 

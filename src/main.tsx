@@ -4,6 +4,9 @@ import { PackageServiceHandler } from './service/PackageService';
 
 import './index.css'
 import './app.css'
+import '../node_modules/@sqlite.org/sqlite-wasm/sqlite-wasm/jswasm/sqlite3-opfs-async-proxy.js';
+import '../node_modules/@sqlite.org/sqlite-wasm/sqlite-wasm/jswasm/sqlite3.js';
+
 import { LocalStorageInstance } from './Storage';
 
 render(<SqlAttackContainer
