@@ -99,7 +99,6 @@ export function SQLTask(props: SQLTaskProps) {
     }
   }, [dbname]);
 
-  console.log(dbname, taskData);
   return (<div className="sqltaskContainer">
     <div className={"notificationDbBusy"}
       style={{display: !proxy.getReadyState() ? "block" : "none"}}>

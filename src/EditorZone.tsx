@@ -186,7 +186,6 @@ export function ResultsFeedback(props: ResultsFeedbackProps) {
  */
 export function EditorZone(props: EditorZoneProps) {
 
-  console.log(props);
   const dbproxy = props.dbproxy;
   const storage = props.storage;
   const taskkey = props.pkg.name;
@@ -194,12 +193,10 @@ export function EditorZone(props: EditorZoneProps) {
   const evaluator = props.evaluator;
   const editorRef = useRef(null);
 
-  console.log(props);
   
   const [answer, setAnswer] = useState(pkg.scaffold);
 
   useEffect(() => {
-    console.log("Updating")
     const previousSolution =
       storage.getSubmission(taskkey);
 
@@ -302,7 +299,6 @@ export function EditorZone(props: EditorZoneProps) {
         queryOnly: true,
         queryOutput: userResults.results[0].actual,
       })
-      console.log(userResults.resultData);
     } catch(error) {
       setResults({
         results: [],

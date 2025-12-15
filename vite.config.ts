@@ -12,6 +12,7 @@ export default defineConfig({
       'Cross-Origin-Embedder-Policy': 'require-corp',
     },
   },
+  
   // Nasty but it works...
   assetsInclude: [
     "node_modules/@sqlite.org/sqlite-wasm/sqlite-wasm/jswasm/sqlite3-opfs-async-proxy.js",
@@ -19,10 +20,12 @@ export default defineConfig({
     'node_modules/coi-serviceworker/coi-serviceworker.js'
   ],
   build: {
+    assetsDir: './',
     rollupOptions: {
       output: {
-        assetFileNames:'assets/[name][extname]',
-      }
+        assetFileNames:'[name][extname]',
+        
+      },
     }
   },
   optimizeDeps: {
@@ -30,6 +33,16 @@ export default defineConfig({
       'coi-serviceworker/*'],
   },
   plugins: [wasm(), topLevelAwait(), preact(), mdPlugin({ mode: [Mode.HTML,
-    Mode.MARKDOWN, Mode.TOC] })],
+    Mode.MARKDOWN, Mode.TOC] }),
+  {
+      name: "isolation",
+      configureServer(server) {
+        server.middlewares.use((_req, res, next) => {
+          res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
+          res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
+          next();
+        });
+      },
+    }],
   base: "/sqlattack/"
 })
