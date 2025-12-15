@@ -24,7 +24,7 @@ export function FormatRowAsCSVString(row: Array<any>) {
   for(let i = 0; i < row.length-1; i++) {
     csvstr += `${row[i]},`
   }
-  csvstr += `${row[row.length-1]}`
+  csvstr += `${row[row.length-1]}\n`
   return csvstr;
 }
 
@@ -35,7 +35,7 @@ export function FlattenRows(rows: Array<string>) {
   let rowStr = '';
   
   for(let i = 0; i < rows.length; i++) {
-    rowStr += `${rows[i]}\n`
+    rowStr += `${rows[i]}`
   }
   return rowStr;
 }
@@ -60,43 +60,69 @@ export async function OrderedEntriesEvaluationTest(
   expectedData: EvaluationTest,
   _dbProxy: DatabaseProxy): Promise<ResultEntry> {
 
-  const respText = FlattenRows(resultData
-    .map(r => TransformRow(r.row).FormatRowAsCSVString()))
-  const epctText = FlattenRows(expectedData.rows
-    .map(r => TransformRow(r.row).FormatRowAsCSVString()))
-  const result = respText === epctText;
+  const respRows = resultData.map(r => TransformRow(r.row)
+    .FormatRowAsCSVString());
+  const epctRows = expectedData.rows.map(r => TransformRow(r.row)
+    .FormatRowAsCSVString());
 
-  const diffData: Array<ReactElement> = [];
+
+  const respTextOutput = FlattenRows(resultData
+    .map(r => TransformRow(r.row).FormatRowAsCSVString()))
+  const epctTextOutput = FlattenRows(expectedData.rows
+    .map(r => TransformRow(r.row).FormatRowAsCSVString()))
+  const result = respTextOutput === epctTextOutput;
+
+  if(respRows.length > epctRows.length) {
+    const diffRows = epctRows.length - respRows.length;
+    for(let i = 0; i < diffRows; i++) {
+      respRows.push('');
+    }
+  } else {
+    const diffRows = respRows.length - epctRows.length;
+    for(let i = 0; i < diffRows; i++) {
+      epctRows.push('');
+    }
+    
+  }
+
   let currentLineBuffer: Array<React.ReactElement> = []
-  
-  diffChars(respText, epctText)
-    .forEach((e) => {
-      const p = e;
+  const diffData: Array<ReactElement> = [];
+  const totalElements = epctRows.length;
 
-      if(p.value === "\n") {
-        const newDiffObj = (
-          <div className={'diffLineEntry'}>
-            {currentLineBuffer};
-          </div>
-        );
-        diffData.push(newDiffObj);
+  for(let i = 0; i < totalElements; i++) {
+    const respText = respRows[i];
+    const epctText = epctRows[i];
+    
+    diffChars(respText, epctText)
+      .forEach((e) => {
+        const p = e;
+
+        if(p.value === "\n") {
+          const newDiffObj = (
+            <div className={'diffLineEntry'}>
+              {currentLineBuffer};
+            </div>
+          );
+          diffData.push(newDiffObj);
         
-        currentLineBuffer = [];
-      }
-      let obj = (<span style={{color:'#ffffff'}}>{p.value}</span>);
-      if(p.added) {
-        obj = (<span style={{color:'#00ff00'}}>{p.value}</span>)
-      } else if(p.removed) {
-        obj = (<span style={{color:'#ff0000'}}>{p.value}</span>)
-      }
+          currentLineBuffer = [];
+        }
+        let obj = (<span style={{color:'#ffffff'}}>{p.value}</span>);
+        if(p.added) {
+          obj = (<span style={{color:'#00ff00'}}>{p.value}</span>)
+        } else if(p.removed) {
+          obj = (<span style={{color:'#ff0000'}}>{p.value}</span>)
+        }
 
-      currentLineBuffer.push(obj);
-    });
+        currentLineBuffer.push(obj);
+      });
 
+  }
+  
   return {
     test: expectedData.test,
-    actual: respText,
-    expected: epctText,
+    actual: respTextOutput,
+    expected: epctTextOutput,
     passed: result,
     diffData,
     

@@ -13,6 +13,7 @@ import { ReactElement } from 'preact/compat';
  * Feedback from evaluator
  */
 export type ResultsFeedbackProps = {
+  runningSubmission: boolean
   results: Array<ResultEntry>
   available: boolean
   error: boolean
@@ -141,6 +142,7 @@ export function FeedbackSegment(props: FeedbackProps) {
  */
 export function ResultsFeedback(props: ResultsFeedbackProps) {
 
+  const runningSubmission = props.runningSubmission;
   const isError = props.error;
   const isAvailable = props.available;
   const isQueryOnly = props.queryOnly;
@@ -156,7 +158,13 @@ export function ResultsFeedback(props: ResultsFeedbackProps) {
         actual={actual} expected={expected}/>
   });  
 
-  return isError ?
+  return runningSubmission ?
+    <div className="resultsUnavailable">
+      <span className="resultUnavailableText">
+        Submission Is Currently Running
+      </span>
+    </div> :
+    isError ?
     <div className="resultsError">
       {errorMessage}
     </div>
@@ -195,6 +203,7 @@ export function EditorZone(props: EditorZoneProps) {
 
   
   const [answer, setAnswer] = useState(pkg.scaffold);
+  const [runningSubmission, setRunningSubmission] = useState(false);
 
   useEffect(() => {
     const previousSolution =
@@ -240,9 +249,9 @@ export function EditorZone(props: EditorZoneProps) {
 
     const proxy = dbproxy;
     let success = false;
-
+    
     storage.saveSubmission(taskkey, { code: answer });
-
+    setRunningSubmission(true);
     try {
       // NOTE: This is where it is tested
       const userResults = await proxy
@@ -269,6 +278,7 @@ export function EditorZone(props: EditorZoneProps) {
       })
     }
     storage.saveProgress(taskkey, { completed: success });
+    setRunningSubmission(false);
   };
 
   //
@@ -286,6 +296,7 @@ export function EditorZone(props: EditorZoneProps) {
   // 
 
   const queryDatabase = async (_e: any) => {
+    setRunningSubmission(true);
     const proxy = dbproxy;
     try {
       const userResults = await proxy
@@ -309,6 +320,7 @@ export function EditorZone(props: EditorZoneProps) {
         queryOutput: '',
       })
     }
+    setRunningSubmission(false);
   }
 
   const onShortcutTriggerDown = (e: any) => {
@@ -378,6 +390,7 @@ export function EditorZone(props: EditorZoneProps) {
     </div>
     <div className="attackResults">
       <ResultsFeedback
+        runningSubmission={runningSubmission}
         results={results.results}
         error={results.error}
         errorMessage={results.errorMessage}

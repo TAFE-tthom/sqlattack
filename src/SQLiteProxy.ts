@@ -345,17 +345,14 @@ export class SqliteProxy implements DatabaseProxy {
 
     const resultEntries: Array<ResultEntry> = [];
     const evalTests = evaluator.evaldata;
-    console.log(dbId, this.getDatabaseSubmissionId());
-    if(dbId === this.getDatabaseSubmissionId()) {
-      // Evaluates against the set of tests
-      for(const t of evalTests) {
-        const evaloper = t.oper;
-        const resultEntry = await evaloper(returnedData,
-          t, this);
-        resultEntries.push(resultEntry);
+    // Evaluates against the set of tests
+    for(const t of evalTests) {
+      const evaloper = t.oper;
+      const resultEntry = await evaloper(returnedData,
+        t, this);
+      resultEntries.push(resultEntry);
 
-      
-      }
+    
     }
     
     // Final results from the evaluation
