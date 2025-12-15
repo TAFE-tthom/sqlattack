@@ -15,7 +15,7 @@ Example:
 
 
 ```sql
-SELECT 'Ricky', 'Nightshade';
+SELECT 'Ricky', 'Davidson';
 ```
 
 Remember:
