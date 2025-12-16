@@ -8,6 +8,7 @@ import type { StorageInstance } from './Storage';
 import './styles/EditorZone.css';
 import type { SqliteProxy } from './SQLiteProxy';
 import { ReactElement } from 'preact/compat';
+import { FlattenRows, FormatRowAsCSVString } from './service/exercises/util/Utility';
 
 /**
  * Feedback from evaluator
@@ -256,6 +257,9 @@ export function EditorZone(props: EditorZoneProps) {
       // NOTE: This is where it is tested
       const userResults = await proxy
         .check(answer, evaluator);
+
+      const output = FlattenRows(userResults.resultData.map(r =>
+        FormatRowAsCSVString(r.row)));
         
       setResults({
         results: userResults.results,
@@ -263,16 +267,22 @@ export function EditorZone(props: EditorZoneProps) {
         error: false,
         errorMessage: '',
         queryOnly: false,
-        queryOutput: '',
+        queryOutput: output,
       });
+
       success = userResults.success;
 
     } catch(error) {
+      
+      const err = error as any;
+      const defaultMsg = 'Error occurred when retrieving results';
+      const msg = err.result ? err.result.message : defaultMsg;
+      console.warn(err);
       setResults({
         results: [],
         available: true,
         error: true,
-        errorMessage: (error as any).result.message,
+        errorMessage: msg,
         queryOnly: false,
         queryOutput: '',
       })
@@ -300,22 +310,28 @@ export function EditorZone(props: EditorZoneProps) {
     const proxy = dbproxy;
     try {
       const userResults = await proxy
-        .sketch(answer, evaluator);
-        
+        .sketch(answer);
+      const output = FlattenRows(userResults.resultData.map(r =>
+        FormatRowAsCSVString(r.row)));
       setResults({
         results: userResults.results,
         available: true,
         error: false,
         errorMessage: '',
         queryOnly: true,
-        queryOutput: userResults.results[0].actual,
+        queryOutput: output,
       })
     } catch(error) {
+
+      const err = error as any;
+      const defaultMsg = 'Error occurred when retrieving results';
+      const msg = err.result ? err.result.message : defaultMsg;
+      console.warn(err);
       setResults({
         results: [],
         available: true,
         error: true,
-        errorMessage: (error as any).result.message,
+        errorMessage: msg,
         queryOnly: false,
         queryOutput: '',
       })

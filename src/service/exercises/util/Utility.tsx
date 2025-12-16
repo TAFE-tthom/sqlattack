@@ -16,16 +16,21 @@ export function TransformRow(row: Array<any>) {
   }
 }
 
-/**
- * Formats the row as a csv string
- */
-export function FormatRowAsCSVString(row: Array<any>) {
+export function FormatRowAsCSVEntry(row: Array<any>) {
+  
   let csvstr = '';
   for(let i = 0; i < row.length-1; i++) {
     csvstr += `${row[i]},`
   }
-  csvstr += `${row[row.length-1]}\n`
+  csvstr += `${row[row.length-1]}`
   return csvstr;
+}
+
+/**
+ * Formats the row as a csv string
+ */
+export function FormatRowAsCSVString(row: Array<any>) {
+  return FormatRowAsCSVEntry(row) + '\n';
 }
 
 /**
@@ -41,16 +46,81 @@ export function FlattenRows(rows: Array<string>) {
 }
 
 /**
+ * Assists with constructing the data
+ */
+export function InsertIntoFormat(table: string,
+  fields: Array<string>, rows: Array<Array<any>>) {
+
+  const fmtFields = FormatRowAsCSVEntry(fields);
+  let formatInsert = `INSERT INTO ${table}(${fmtFields}) \nVALUES`
+  for(let i = 0; i < rows.length; i++) {
+    if(i < (rows.length-1)) {
+      
+    }
+    const fmtRow = FormatRowAsCSVEntry(rows[i]);
+    const insertValues = `(${fmtRow})`;
+    if(i < (rows.length-1)) {
+      formatInsert += insertValues + ',';
+      
+    } else {
+      formatInsert += insertValues;
+    }
+  }
+  
+  return formatInsert;
+}
+
+/**
  * Boring utility function to convert a string array to a string
  */
-export function StringArrayToString(sarray: string[]) {
+export function StringArrayToString(
+  sarray: string[]) {
+
   let s = '';
+
   for(let i = 0; i < sarray.length; i++) {
     s += '' + sarray[i];
   }
+
   return s;
 }
- 
+
+
+
+/**
+ * This function is used to throw data at
+ * construction and check to see if it is working
+ */
+export async function TableConstructionEvaluation(
+  _resultData: Array<ResultRow>,
+  expectedData: EvaluationTest,
+  dbProxy: DatabaseProxy): Promise<ResultEntry> {
+
+
+  //format: queries
+  const dbMap = dbProxy.getDatabaseIDMap();
+  const queries = expectedData.extra;
+  let results: Array<ResultRow> = [];
+
+  for(const q of queries) {
+    const meta = q as any;
+    if(meta.kind === 'INSERT') {
+      const { table, columns, values } = q;
+      const statements = InsertIntoFormat(table, columns, values);
+      
+      dbProxy.execute(statements, dbMap.submission.dbId);
+    } else if(meta.kind === 'SELECT') {
+      // Last one, get the results out
+      // What should we do? Use .check?
+      const statements = q.query;
+      
+      results = await dbProxy.query(statements);
+      
+    }
+  }
+  return OrderedEntriesEvaluationTest(results, expectedData, dbProxy);
+}
+
 /**
  * OrderedEntry checks, ensure that the same set that
  * is returned matches the expected order.
@@ -65,6 +135,8 @@ export async function OrderedEntriesEvaluationTest(
   const epctRows = expectedData.rows.map(r => TransformRow(r.row)
     .FormatRowAsCSVString());
 
+
+  console.log(resultData);
 
   const respTextOutput = FlattenRows(resultData
     .map(r => TransformRow(r.row).FormatRowAsCSVString()))

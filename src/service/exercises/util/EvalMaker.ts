@@ -1,6 +1,8 @@
 import {
   FirstEntryEvaluationTest,
-  OrderedEntriesEvaluationTest }
+  OrderedEntriesEvaluationTest, 
+  TableConstructionEvaluation,
+  InsertIntoFormat}
   from './Utility';
 
 import {
@@ -15,7 +17,8 @@ const EvalInitState = function(
   const stateData = {
     test: '',
     oper: (() => { }) as any,
-    rows: [] as Array<ResultRow>
+    rows: [] as Array<ResultRow>,
+    extra: [] as Array<any>
   };
 
   function expectedData(rows: Array<ResultRow>) {
@@ -25,6 +28,35 @@ const EvalInitState = function(
       next: () => EvalInitState(tests),
       done: () => tests
     };
+  }
+  function extrafn(entry: any) {
+    stateData.extra.push(entry);
+    return {
+      extra: extrafn,
+      expectedData
+    }
+  }
+
+  
+
+  function insertStatement(table: string, columns: Array<string>) {
+    const values: Array<Array<any>> = [];
+    const entry = InsertIntoFormat(table, columns, values);
+
+    function addValues(data: Array<any>) {
+      values.push(data);
+      return {
+        addValues,
+        insertStatement,
+        expectedData
+      }
+    }
+    
+    stateData.extra.push(entry);
+    return {
+      addValues,
+      expectedData
+    }
   }
 
   const initData = {
@@ -36,6 +68,7 @@ const EvalInitState = function(
           stateData.oper
             = FirstEntryEvaluationTest;
           return {
+            extra: extrafn,
             expectedData
           }
         },
@@ -44,6 +77,16 @@ const EvalInitState = function(
             = OrderedEntriesEvaluationTest;
 
           return {
+            extra: extrafn,
+            expectedData
+          }
+        },
+        constructionEval: () => {
+          stateData.oper
+            = TableConstructionEvaluation;
+          return {
+            extra: extrafn,
+            insertStatement,
             expectedData
           }
         }
@@ -59,7 +102,8 @@ const EvalTaskInitState = function(
   const stateData = {
     test: '',
     oper: (() => { }) as any,
-    rows: [] as Array<ResultRow>
+    rows: [] as Array<ResultRow>,
+    extra: [] as Array<any>
   };
 
   function expectedData(rows: Array<ResultRow>) {
@@ -69,6 +113,53 @@ const EvalTaskInitState = function(
       next: () => EvalTaskInitState(task),
       done: () => task
     };
+  }
+
+  function extrafn(entry: any) {
+    stateData.extra.push(entry);
+    
+    return {
+      extra: extrafn,
+      expectedData
+    }
+  }
+
+  function selectStatement(query: string) {
+
+    const metaentry = {
+      query,
+      kind: 'SELECT'
+    };
+
+    stateData.extra.push(metaentry);
+
+    return {
+      
+      expectedData
+    }
+  }
+
+  function insertStatement(table: string, columns: Array<string>) {
+    const metaentry = {
+      table, columns, values: [] as Array<Array<any>>,
+      kind: 'INSERT'
+    };
+    
+    stateData.extra.push(metaentry);
+
+    function addValues(data: Array<any>) {
+      metaentry.values.push(data);
+
+      return {
+        addValues,
+        insertStatement,
+        selectStatement
+      }
+    }
+    
+    return {
+      addValues,
+    }
   }
 
   const initData = {
@@ -88,6 +179,16 @@ const EvalTaskInitState = function(
             = OrderedEntriesEvaluationTest;
 
           return {
+            expectedData
+          }
+        },
+        constructionEval: () => {
+          stateData.oper
+            = TableConstructionEvaluation;
+          return {
+            extra: extrafn,
+            insertStatement,
+            selectStatement,
             expectedData
           }
         }

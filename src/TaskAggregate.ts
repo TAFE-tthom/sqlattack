@@ -1,4 +1,5 @@
 import type { ReactElement } from "preact/compat";
+import { DatabaseIDMap } from "./SQLiteProxy";
 
 /**
  * Database Proxy interface
@@ -9,6 +10,17 @@ export interface DatabaseProxy {
 
   check(userAnswer: string,
     evaluator: TaskSubmissionEvaluator): Promise<TaskEvaluationResult>;
+
+  
+  execute(statements: string,
+    dbId: string):
+    Promise<Array<ResultRow>>;
+
+
+  query(statements: string): Promise<Array<ResultRow>>;
+
+
+  getDatabaseIDMap(): DatabaseIDMap;
 }
 
 /**
@@ -72,6 +84,8 @@ export type EvaluationOperation = (
   testData: EvaluationTest,
   dbProxy: DatabaseProxy) => Promise<ResultEntry>
 
+
+
 /**
  * EvaluationTest, given test name, test data and
  * an operation, it will check to see if passes
@@ -81,6 +95,7 @@ export type EvaluationTest = {
   test: string
   oper: EvaluationOperation
   rows: Array<ResultRow>
+  extra: Array<any>
 }
 
 /**

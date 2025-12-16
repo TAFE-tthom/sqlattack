@@ -1,7 +1,5 @@
 // @ts-ignore
 import { sqlite3Worker1Promiser } from "@sqlite.org/sqlite-wasm"
-// @ts-ignore
-import sqlite from '@sqlite.org/sqlite-wasm/sqlite-wasm/jswasm/sqlite3.js'
 import type { DatabaseProxy, ResultEntry, ResultRow, TaskEvaluationResult, TaskPackage, TaskSubmissionEvaluator } from './TaskAggregate';
 
 
@@ -61,6 +59,9 @@ export class SqliteMessageResult {
   }
 }
 
+/**
+ * 
+ */
 export type DatabaseKindFlag = "Scaffold" | "Submission" | "Sketch";
 
 const DatabaseKindMap = {
@@ -126,6 +127,10 @@ export class SqliteProxy implements DatabaseProxy {
     this.channel = channel;
     this.package = pkg;
     this.syncIdMap();
+  }
+
+  getDatabaseIDMap() {
+    return this.databaseIdMap;
   }
 
   syncIdMap() {
@@ -210,11 +215,11 @@ export class SqliteProxy implements DatabaseProxy {
         onready: () => resolve(_promiser),
       });
     });
-
+    proxy.dbname = pkg.database;
     proxy.setChannel(promiser);
     proxy.setPackage(pkg);
-    proxy.dbname = pkg.database;
 
+    proxy.syncIdMap();
     proxy.setLoading();    
     await proxy.useExistingOrCreate();
 
@@ -230,7 +235,7 @@ export class SqliteProxy implements DatabaseProxy {
    * that will return a proxy object to interact with
    * database
    */
-  static async Make(dbname: string, pkg: TaskPackage) {
+  static async Make(pkg: TaskPackage) {
 
     const promiser: any = await new Promise((resolve) => {
       const _promiser = sqlite3Worker1Promiser({
@@ -239,7 +244,7 @@ export class SqliteProxy implements DatabaseProxy {
     });
 
 
-    const proxy = new SqliteProxy(dbname, promiser, pkg);
+    const proxy = new SqliteProxy(pkg.database, promiser, pkg);
     proxy.setReady();
 
     await proxy.destroy();
@@ -300,10 +305,37 @@ export class SqliteProxy implements DatabaseProxy {
    * Will use the same logic as `check` but will be
    * using the `_sketch` database
    */
-  async sketch(userAnswer: string,
-    evaluator: TaskSubmissionEvaluator): Promise<TaskEvaluationResult> {
-    return this.queryEvalution(userAnswer, evaluator,
-      this.getDatabaseSketchId());
+  async sketch(userAnswer: string):
+    Promise<TaskEvaluationResult> {
+
+    const dbId = this.getDatabaseSketchId();
+    const channel = this.getChannel();
+    const returnedData: Array<ResultRow> = [];
+    // Communicates to the database
+    // and aggregates the results
+    await channel(SqliteCommands.Exec, {
+      dbId, sql: userAnswer,
+      callback: (result: any) => {
+        if(result.row) {
+          const rowData: ResultRow = {row: []};
+          for(let i = 0; i < result.row.length; i++) {
+            const r = result.row[i];
+            rowData.row.push(r);
+          }
+          returnedData.push(rowData);
+        }
+      }
+    });
+
+    const evalResults: TaskEvaluationResult = {
+      warnings: [], //WARN: Not used
+      errors: [], //WARN: Not used
+      results: [],
+      resultData: returnedData,
+      success: false
+    };
+
+    return evalResults;
   }
 
   /**
@@ -311,8 +343,39 @@ export class SqliteProxy implements DatabaseProxy {
    */
   async check(userAnswer: string, evaluator: TaskSubmissionEvaluator)
     :Promise<TaskEvaluationResult> {
+    // Sync the scaffold and submission DB
+
+    await this.resetSubmissionDB();
+
     return this.queryEvalution(userAnswer, evaluator, 
-      this.getDatabaseSubmissionId())
+      this.getDatabaseSubmissionId());
+  }
+
+  /**
+   * Executes the statements given and gets
+   * the returned results
+   */
+  async execute(statements: string,
+    dbId: string): Promise<Array<ResultRow>> {
+    
+    const channel = this.getChannel();
+    const returnedData: Array<ResultRow> = [];
+
+    await channel(SqliteCommands.Exec, {
+      dbId, sql: statements,
+      callback: (result: any) => {
+        if(result.row) {
+          const rowData: ResultRow = {row: []};
+          for(let i = 0; i < result.row.length; i++) {
+            const r = result.row[i];
+            rowData.row.push(r);
+          }
+          returnedData.push(rowData);
+        }
+      }
+    });
+
+    return returnedData;
   }
 
   /**
@@ -373,22 +436,22 @@ export class SqliteProxy implements DatabaseProxy {
    * Query that will be executed on the newly created
    * database
    */
-  query(statements: string, resCallback: ResponseCallback) {
+  async query(statements: string) {
     const ref = this;
     const channel = this.getChannel();
 
+    const results: Array<ResultRow> = []
     // pushed an async call, NOTE: Sends it to submission
-    this.stack.push(async () => {
-      await channel(SqliteCommands.Exec, {
-        dbId: ref.getDatabaseSubmissionId(),
-        sql: statements, callback: (result: any) => {
-          const data = resCallback(result);
-          return data;
+    await channel(SqliteCommands.Exec, {
+      dbId: ref.getDatabaseSubmissionId(),
+      sql: statements, callback: (result: any) => {
+        if(result.row) {
+          results.push({ row: result.row });
         }
-      });
+      }
     });
 
-    return this;
+    return results;
   }
 
   getDatabaseSubmissionId() {
@@ -427,6 +490,17 @@ export class SqliteProxy implements DatabaseProxy {
     }
   }
 
+  
+  getDatabaseNameFromFlag(kind: DatabaseKindFlag) {
+    if(kind === "Scaffold") {
+      return this.databaseIdMap.scaffold.dbName;
+    } else if(kind === "Submission") {
+      return this.databaseIdMap.submission.dbName;
+    } else {
+      return this.databaseIdMap.sketch.dbName;
+    }
+  }
+
   /**
    * Setups the database
    * Calls all the setup operations 
@@ -459,11 +533,13 @@ export class SqliteProxy implements DatabaseProxy {
     const channel = this.getChannel();
     const ref = this;
 
+    const dbname = this.getDatabaseNameFromFlag(kind);
+  
     this.stack.push(async (_data: any) => {
 
       await channel(SqliteCommands.ConfigGet, {});
       const resp = await channel(SqliteCommands.Open, {
-        filename: `file:${this.formattedName()}?vfs=opfs`
+        filename: `file:${dbname}?vfs=opfs`
       });
       ref.setDatabaseIdWithFlag(kind, resp.dbId);
 
@@ -482,6 +558,60 @@ export class SqliteProxy implements DatabaseProxy {
     const submission = `${dbname}_submission.sqlite3`;
 
     return {scaffold, sketch, submission}
+  }
+
+  /**
+   * Overwrites the submission DB with the scaffold one
+   */
+  async resetSubmissionDB() {
+    
+    const {scaffold, submission} = this.variations();
+
+    try {
+      
+      const root = await navigator.storage.getDirectory();
+      const scafFile = await (await root
+        .getFileHandle(scaffold))
+        .getFile();
+
+
+      const submFile = await (await root.getFileHandle(submission,
+        {create: true}))
+        .createWritable();
+
+      await submFile.write(scafFile);
+      await submFile.close();
+    } catch(error) {
+      const err = error as any;
+      console.error(err.name, err.message);
+    }
+  }
+  
+  /**
+   * Overwrites the submission DB with the scaffold one
+   */
+  async syncSubmissionToScaffold() {
+    
+    const {scaffold, submission} = this.variations();
+
+    try {
+      
+      const root = await navigator.storage.getDirectory();
+      const submFile = await (await root
+        .getFileHandle(submission))
+        .getFile();
+
+      
+      const scafFile = await (await root.getFileHandle(scaffold,
+        {create: true}))
+        .createWritable();
+
+      await scafFile.write(submFile);
+      await scafFile.close();
+    } catch(error) {
+      const err = error as any;
+      console.error(err.name, err.message);
+    }
   }
 
   /**
@@ -512,6 +642,7 @@ export class SqliteProxy implements DatabaseProxy {
       await sketFile.write(scafFile);
       await submFile.close();
       await sketFile.close();
+
     } catch(error) {
       const err = error as any;
       console.error(err.name, err.message);
@@ -528,11 +659,14 @@ export class SqliteProxy implements DatabaseProxy {
     const filename = `${this.formattedName()}`;
     const doesExist = await this.fileExist(filename);
     if(doesExist) {
-    await this.open(DatabaseKindMap.Scaffold)
-      .run();
+      await this.open(DatabaseKindMap.Submission)
+        .run();
       await this.syncDbs();
     } else {
 
+      //Open submission db
+      await this.open(DatabaseKindMap.Submission)
+        .run();
       //Create an setup
       await this.open(DatabaseKindMap.Scaffold)
         .setup(DatabaseKindMap.Scaffold)
