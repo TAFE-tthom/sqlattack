@@ -174,7 +174,7 @@ export function SqlTaskContainer(props: SqlTaskContainerProps) {
     <SQLTask pkg={exercises[selectedPack].tasks[selected]}
       storage={storage} /> :
     <div className="sqltaskContainer_NotSelected">
-      <span className="sql_notselected">Please Select A Task</span>
+      <span className="sql_notselected">Please Select An Exercise</span>
     </div>);
 }
 

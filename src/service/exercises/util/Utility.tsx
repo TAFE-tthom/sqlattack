@@ -145,14 +145,14 @@ export async function OrderedEntriesEvaluationTest(
   const result = respTextOutput === epctTextOutput;
 
   if(respRows.length > epctRows.length) {
-    const diffRows = epctRows.length - respRows.length;
-    for(let i = 0; i < diffRows; i++) {
-      respRows.push('');
-    }
-  } else {
     const diffRows = respRows.length - epctRows.length;
     for(let i = 0; i < diffRows; i++) {
       epctRows.push('');
+    }
+  } else {
+    const diffRows = epctRows.length - respRows.length;
+    for(let i = 0; i < diffRows; i++) {
+      respRows.push('');
     }
     
   }
@@ -164,7 +164,6 @@ export async function OrderedEntriesEvaluationTest(
   for(let i = 0; i < totalElements; i++) {
     const respText = respRows[i];
     const epctText = epctRows[i];
-    
     diffChars(respText, epctText)
       .forEach((e) => {
         const p = e;

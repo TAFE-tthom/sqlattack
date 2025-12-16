@@ -10,6 +10,8 @@ import type { SqliteProxy } from './SQLiteProxy';
 import { ReactElement } from 'preact/compat';
 import { FlattenRows, FormatRowAsCSVString } from './service/exercises/util/Utility';
 
+import { EditorView } from '@uiw/react-codemirror';
+
 /**
  * Feedback from evaluator
  */
@@ -391,9 +393,10 @@ export function EditorZone(props: EditorZoneProps) {
             flex: 1 }}
           theme={THEME}
           value={answer}
-          extensions={[langs.sql()]}
+          extensions={[langs.sql(), EditorView.lineWrapping]}
           onKeyDown={onShortcutTriggerDown}
           onKeyUp={onShortcutTriggerUp}
+
         />
     </div>
     <div className="attackSubmission">

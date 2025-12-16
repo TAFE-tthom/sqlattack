@@ -21,7 +21,7 @@
   background-color: #1a1b26;
   padding-left: 0.25rem;
   padding-right: 0.3rem;
-  min-width: 120px;
+  min-width: 130px;
   border-right: 1px solid #3a3b46;
 }
 
@@ -84,7 +84,7 @@
 .taskSelectNavItemSoft {
   display: flex;
   list-style: none;
-  text-align: left;
+  text-align: center;
   width: 100%;
   justify-items: flex-end;
   justify-content: center;
