@@ -154,6 +154,7 @@
   border-color: #222222;
   border-style: solid;
   border-width: 1px;
+  max-width: 520px;
   margin: 0;
 }
 
@@ -210,6 +211,7 @@
   text-align: left;
   font-size: 10pt;
   font-weight: 300;
+  max-width: 520px;
   font-family: monospace;
   color: white;
 }

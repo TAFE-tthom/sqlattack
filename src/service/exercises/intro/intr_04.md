@@ -1,29 +1,47 @@
 
-## DataTypes - Numbers
+## DataTypes - Text
 
-We now look at datatypes that represent numbers.
+As with most programming languages we have a way we categorise data. SQL is no different in this case, depending on what data you want to record, you want to select and use most suitable datatype to represent this.
 
-### Numbers
+Each datatype has suitable operators associated with it. We will look at the TEXT datatypes now.
 
-There are two common representations of numbers. `INTEGER` and `REAL` (`REAL` is usually referred to as `FLOAT` or `DOUBLE`).
+### Text
 
-`INTEGER` or `INT`, represent the integer set of numbers, these are number which are not fractions such as `-1`, `1` and `10`.
+For text data, this is usually expressed between single quotes like so:
 
-`REAL` or `FLOAT`, are floating point numbers, these have a precision component and are intended to represent the real number set.
+```sql
+'This is text'
+```
 
-### Boolean
+And the following data types are appropriate:
 
-`BOOLEAN`, which is a representation of an integer, represents two values. `true` and `false`.
+* `CHAR(size)` - Fixed number of characters
 
-This representation is useful for making decisions with code.
+* `VARCHAR(size)` - Up to the number of characters.
 
+* `TEXT` - Arbitrary size
 
-### Date and Time
+### Operators
 
-Date and datetime datatypes assist with keeping track and recording information with our records.
+* `||` - For concatenation.
 
-We will see more about these datatypes later.
+Within `sqlite`, the operator used for concatenation is `||`, however and what you will learn is that operators are not **universal** with sql.
 
+Within `sqlite`, there is typically a preference to use `functions` over `operators`
+
+### Exercise
+
+Use `||` to concatenate the words:
+
+* `Mr`
+* `Jeff`
+* `Davidson`
+
+The resulting output should be:
+
+`Mr Jeff Davidson`
+
+You will need to ensure you have spaces between each word.
 
 ---
 

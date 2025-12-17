@@ -1,0 +1,11 @@
+[
+  {
+    "row": [
+      "table",
+      "Product",
+      "Product",
+      2,
+      "CREATE TABLE Product(product_id INT PRIMARY KEY, name VARCHAR(40) NOT NULL, price DECIMAL NOT NULL, discount DECIMAL NOT NULL)"
+    ]
+  }
+]

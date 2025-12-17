@@ -1,0 +1,8 @@
+.retrieveProgression {
+  padding: 0.25em;
+  cursor: pointer;
+}
+
+.retrieveProgression:hover {
+  transform: scale(1.25);
+}

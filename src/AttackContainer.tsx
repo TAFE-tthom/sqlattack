@@ -1,10 +1,10 @@
 import { SQLTask } from "./Task"
+import { KeyPrefixes, type StorageInstance } from "./Storage";
+import { RetrieveProgression } from './progression/Retrieve';
+import type { ReactElement } from "preact/compat";
 import type { ExercisePack } from "./service/exercises/Defaults";
 import { useState } from "preact/hooks"
-
 import './styles/AttackContainer.css';
-import type { ReactElement } from "preact/compat";
-import { KeyPrefixes, type StorageInstance } from "./Storage";
 
 /**
  * SetData callback, used to update and trigger
@@ -157,6 +157,10 @@ export function SqlTaskSelectorColumn(props: SqlTaskSelectorProps) {
     </nav>) 
 }
 
+export type SqlAttackTopBarProps = {
+  storage: StorageInstance,
+  exercises: Array<ExercisePack>
+}
 
 /**
  * TaskContainer, used to be within the view
@@ -178,11 +182,15 @@ export function SqlTaskContainer(props: SqlTaskContainerProps) {
     </div>);
 }
 
-export function SqlAttackTopBar(_props: any) {
+export function SqlAttackTopBar(props: SqlAttackTopBarProps) {
+
+  const storage = props.storage;
+  const exercises = props.exercises;
 
   return (
     <div className={"sqlattackTopBar"}>
       <span>SqlAttack</span>
+      <RetrieveProgression storage={storage} exercises={exercises} />
     </div>
   )
 }
@@ -207,7 +215,7 @@ export function SqlAttackContainer(props: SqlAttackContainerProps) {
 
   return (<>
     <div className="sqlattackStack">
-      <SqlAttackTopBar />
+      <SqlAttackTopBar storage={storage} exercises={data.exercises} />
       <div className="sqlattackContainer">
 
         <SqlTaskSelectorColumn parentData={data} storage={storage}

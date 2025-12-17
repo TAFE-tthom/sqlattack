@@ -1,5 +1,5 @@
 
-## Multi-Columns - 2
+## Multi-Columns
 
 The previous exercise demonstrated how to output text data as a single column. You can output multiple pieces of data.
 

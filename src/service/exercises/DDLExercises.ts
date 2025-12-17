@@ -1,7 +1,12 @@
 import { ExercisePack } from './Defaults';
 import { NewTask } from './util/EvalMaker';
 
-import { DDLExercises as ExSet } from './ddl/Exported.ts'
+import { DDLExercises as ExSet }
+  from './ddl/Exported.ts'
+
+import { PointOfSaleDB }
+  from '../../samples/PointOfSaleDB.ts'
+import { SqliteCommands } from '../../SQLiteProxy.ts';
 
 export const Exercises: ExercisePack = {
   topic: 'DDL',
@@ -67,6 +72,52 @@ export const Exercises: ExercisePack = {
           "'Problem with the tablet'", 'true'])
         .selectStatement('SELECT * FROM Ticket;')
         .expectedData(ExSet.ex3data)
+    .done(),
+    NewTask()
+      .name("Drop Table - 4")
+      .key('ddl-droptable')
+      .scaffold("-- Your Query Below --")
+      .question(ExSet.ex4)
+      .database('pointofsale01')
+      .setup()
+        .add({
+            command: SqliteCommands.Exec,
+            operation: PointOfSaleDB.getSchema(),
+            extra: []
+          })
+      .skip()
+      .evaluation("DDL")
+        .test('DropTable-1')
+        .constructionEval()
+        .selectStatement(`
+            SELECT name FROM sqlite_schema
+            WHERE type='table' AND
+            name NOT LIKE 'sqlite_%';
+          `)
+        .expectedData(ExSet.ex4data)
+    .done(),
+    NewTask()
+      .name("Alter Table - 5")
+      .key('ddl-altertable01')
+      .scaffold("-- Your Query Below --")
+      .question(ExSet.ex5)
+      .database('pointofsale02')
+      .setup()
+        .add({
+            command: SqliteCommands.Exec,
+            operation: PointOfSaleDB.getSchema(),
+            extra: []
+          })
+      .skip()
+      .evaluation("DDL")
+        .test('AlterTable-1')
+        .constructionEval()
+        .selectStatement(`
+            SELECT * FROM sqlite_schema
+            WHERE type='table' AND
+            name = 'Product';
+          `)
+        .expectedData(ExSet.ex5data)
     .done(),
   ],
   

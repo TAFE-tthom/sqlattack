@@ -1,9 +1,11 @@
 import { TaskPackage } from '../../TaskAggregate';
 
 import { Exercises as IntroPack } from './IntroExercises.ts'
-import { Exercises as DMLPack } from './DMLExercises.ts'
+import { Exercises as DQLPack } from './DQLExercises.ts'
 import { Exercises as DDLPack } from './DDLExercises.ts'
+import { Exercises as DMLPack } from './DMLExercises.ts'
 import { Exercises as JoinsPack } from './JoinsExercises.ts'
+import { Exercises as AggregatesPack } from './AggregatesExercises.ts'
 
 /**
  * ExercisePack that will hold onto the
@@ -28,8 +30,10 @@ export class ExercisePacks {
     return [
       IntroPack,
       DDLPack,
+      DQLPack,
       DMLPack,
       JoinsPack,
+      AggregatesPack
     ]; 
   }
   

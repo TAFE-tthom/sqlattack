@@ -1,3 +1,4 @@
+import remarkGfm from 'remark-gfm'; 
 import ReactMarkdown from 'react-markdown';
 
 import './styles/QuestionView.css';
@@ -19,7 +20,10 @@ export type QuestionViewProps = {
 export function QuestionView(props: QuestionViewProps) {
 
   const question = props.question;
-  const questionHTML = (<ReactMarkdown>{question}</ReactMarkdown>);
+  const questionHTML = (<ReactMarkdown
+    remarkPlugins={[remarkGfm]}
+    >{question}
+  </ReactMarkdown>);
 
   return (<div className="sqlQuestionView">
     {questionHTML}

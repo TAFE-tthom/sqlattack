@@ -22,6 +22,22 @@ export const KeyPrefixes = {
   FormatForProgress: (key: string) => `${KeyPrefixes.Progress}${key}`,
 }
 
+export type ProgressionRecordEntry = {
+  key: string
+  index: number
+  submission: string
+  completed: boolean
+}
+
+/**
+ * ProgressionRecord
+ * Is the full record of your progress
+ */
+export type ProgressionRecord = {
+  timestamp: number
+  entries: Array<ProgressionRecordEntry>
+}
+
 /**
  * Submission Object
  * used to get the currently written code
@@ -53,6 +69,8 @@ export interface StorageInstance {
   getProgress(key: string): ProgressObject | null;
 
   progression(keys: Array<string>): [Map<string, number>, Array<ProgressObject>]
+  
+  makeProgressionRecord(keys: Array<string>): ProgressionRecord
 }
 
 /**
@@ -99,7 +117,6 @@ export class LocalStorageInstance implements StorageInstance {
 
 
   getProgress(key: string): ProgressObject | null {
-    
     const skey = KeyPrefixes.FormatForProgress(key);
     const obj = localStorage.getItem(skey);
     if(obj) {
@@ -123,6 +140,50 @@ export class LocalStorageInstance implements StorageInstance {
         pobjs.push({ completed: false })
       }
     }    
-    return [pmap, pobjs] as [Map<string, number>, Array<ProgressObject>];
+    return [pmap, pobjs] as [Map<string, number>,
+      Array<ProgressObject>];
+  }
+
+  makeProgressionRecord(keys: Array<string>) {
+    const [pmap, pobjs] = this.progression(keys);
+    const entries: Array<ProgressionRecordEntry>  = [];
+    for(const p of pmap.entries()) {
+      const pkey = p[0];
+      const pidx = p[1];
+
+      const pobj = pobjs[pidx];
+
+      const subkey = pkey.replace(KeyPrefixes.Progress, "");
+      const res = this.getSubmission(subkey);
+      if(res) {
+        const submission = res.code;
+        entries.push({
+          key: pkey,
+          index: pidx,
+          submission,
+          completed: pobj.completed
+        });
+        
+      }
+    }
+
+    return {
+      timestamp: Date.now(),
+      entries
+    }
+  }
+
+  loadProgressionFromRecord(progObj: ProgressionRecord) {
+
+    const pentries = progObj.entries;
+
+    for(const pobj of pentries) {
+      const key = pobj.key.replace(KeyPrefixes.Progress, "");
+      const data = { completed: pobj.completed };
+      this.saveProgress(key, data);
+
+    }
+
+    return true;
   }
 }
