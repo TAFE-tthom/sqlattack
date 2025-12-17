@@ -136,7 +136,6 @@ export async function OrderedEntriesEvaluationTest(
     .FormatRowAsCSVString());
 
 
-  console.log(resultData);
 
   const respTextOutput = FlattenRows(resultData
     .map(r => TransformRow(r.row).FormatRowAsCSVString()))
@@ -209,21 +208,35 @@ export async function FirstEntryEvaluationTest(
   expectedData: EvaluationTest,
   _dbProxy: DatabaseProxy) {
 
+  let currentLineBuffer: Array<React.ReactElement> = []
+  const diffData: Array<ReactElement> = [];
   
   const respText = resultData[0].row[0];
   const epctText = expectedData.rows[0].row[0];
   const result = respText === epctText;
-  const diffData = diffChars(respText, epctText)
-    .map(e => {
-      const p = e as any;
-      return p.added ? p.value.bgGreen :
-        p.removed ? p.value.bgRed :
-        p.value;
+  diffChars(respText, epctText)
+      .forEach((e) => {
+        const p = e;
+
+        if(p.value === "\n") {
+          const newDiffObj = (
+            <div className={'diffLineEntry'}>
+              {currentLineBuffer};
+            </div>
+          );
+          diffData.push(newDiffObj);
         
-    })
-    .reduce((p, c) => {
-      return p + c;
-    });
+          currentLineBuffer = [];
+        }
+        let obj = (<span style={{color:'#ffffff'}}>{p.value}</span>);
+        if(p.added) {
+          obj = (<span style={{color:'#00ff00'}}>{p.value}</span>)
+        } else if(p.removed) {
+          obj = (<span style={{color:'#ff0000'}}>{p.value}</span>)
+        }
+
+        currentLineBuffer.push(obj);
+      });
 
   return {
     test: expectedData.test,
