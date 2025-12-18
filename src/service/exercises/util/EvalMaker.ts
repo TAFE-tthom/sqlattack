@@ -2,7 +2,8 @@ import {
   FirstEntryEvaluationTest,
   OrderedEntriesEvaluationTest, 
   TableConstructionEvaluation,
-  InsertIntoFormat}
+  InsertIntoFormat,
+  DataManipulationEvaluation}
   from './Utility';
 
 import {
@@ -203,6 +204,13 @@ const EvalTaskInitState = function(
 
           return {
             expectedData
+          }
+        },
+        dataManipulationEval: () => {
+          stateData.oper = DataManipulationEvaluation;
+
+          return {
+            selectStatement,
           }
         },
         constructionEval: () => {

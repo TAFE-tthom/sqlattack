@@ -86,6 +86,23 @@ export function StringArrayToString(
 }
 
 /**
+ * Utilised on DML related statements
+ * Will require a select statement to be issues
+ */
+export async function DataManipulationEvaluation(  
+  columns: ColumnNames,
+  _resultData: Array<ResultRow>,
+  expectedData: EvaluationTest,
+  dbProxy: DatabaseProxy): Promise<ResultEntry> {
+
+  const query = expectedData.extra[0]; //Expected
+  const statements = query.query;  
+  const results = await dbProxy.query(statements);
+
+  return OrderedEntriesEvaluationTest(columns, results, expectedData, dbProxy);
+}
+
+/**
  * OrderedEntriesEvaluation + Checks if the column names are correct
  */
 export async function OrderedEntriesEvaluationWithColumnNameTest(

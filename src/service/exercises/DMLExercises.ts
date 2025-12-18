@@ -25,7 +25,8 @@ export const Exercises: ExercisePack = {
         .skip()
       .evaluation("DML")
         .test('one-product-1')
-        .orderedEntries()
+        .dataManipulationEval()
+        .selectStatement("SELECT product_id, name, price FROM Product;")
         .expectedData(DMLExercises.ex1data)
     .done(),
     NewTask()
@@ -43,8 +44,33 @@ export const Exercises: ExercisePack = {
         .skip()
       .evaluation("DML")
         .test('many-products-1')
-        .orderedEntries()
+        .dataManipulationEval()
+        .selectStatement("SELECT product_id, name, price FROM Product;")
         .expectedData(DMLExercises.ex2data)
+    .done(),
+    NewTask()
+      .name("Update Products - 3")
+      .key('dml03')
+      .scaffold("-- Your Query Below --")
+      .question(DMLExercises.ex3)
+      .database('update03')
+      .setup()
+        .add({
+            command: SqliteCommands.Exec,
+            operation: PointOfSaleDB.getSchema(),
+            extra: []
+          })
+        .add({
+            command: SqliteCommands.Exec,
+            operation: PointOfSaleDB.getInsertData(),
+            extra: []
+          })
+        .skip()
+      .evaluation("DML")
+        .test('update-products-1')
+        .dataManipulationEval()
+        .selectStatement("SELECT product_id, name, price FROM Product;")
+        .expectedData(DMLExercises.ex3data)
     .done(),
   ]
 };
