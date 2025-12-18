@@ -5,6 +5,7 @@
   flex: 1;
   background-color: #0f101b;
   overflow: hidden;
+  max-height: 1278px;
 }
 
 .sqlattackStack {

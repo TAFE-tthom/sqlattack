@@ -243,7 +243,7 @@ export function SqlAttackContainer(props: SqlAttackContainerProps) {
 
   } as SqlAttackContainerData);
 
-  const [columnState, setColumnState] = useState(false)
+  const [columnState, setColumnState] = useState(true)
 
   return (<>
     <div className="sqlattackStack">

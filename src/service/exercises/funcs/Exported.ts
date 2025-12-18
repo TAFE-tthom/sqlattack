@@ -15,7 +15,7 @@ import ex3data from './ex_03_data.json';
 
 
 // Exercises Batch
-export const JoinsExercises = {
+export const FuncsExercises = {
   ex1, ex1data,
   ex2, ex2data,
   ex3, ex3data,

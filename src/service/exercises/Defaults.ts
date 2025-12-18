@@ -6,6 +6,7 @@ import { Exercises as DDLPack } from './DDLExercises.ts'
 import { Exercises as DMLPack } from './DMLExercises.ts'
 import { Exercises as JoinsPack } from './JoinsExercises.ts'
 import { Exercises as AggregatesPack } from './AggregatesExercises.ts'
+import { Exercises as FunctionPack } from './FunctionExercises.ts'
 
 /**
  * ExercisePack that will hold onto the
@@ -32,6 +33,7 @@ export class ExercisePacks {
       DDLPack,
       DQLPack,
       DMLPack,
+      FunctionPack,
       JoinsPack,
       AggregatesPack
     ]; 

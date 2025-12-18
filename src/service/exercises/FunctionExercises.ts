@@ -3,17 +3,17 @@ import { NewTask } from './util/EvalMaker';
 
 
 
-import { JoinsExercises as ExSet } from './joins/Exported.ts'
+import { FuncsExercises as ExSet } from './funcs/Exported.ts'
 import { SqliteCommands } from '../../SQLiteProxy.ts';
 import { SakilaDatabase } from '../../samples/Sakila.ts';
 
 export const Exercises: ExercisePack = {
-  topic: 'Joins',
-  description: 'Joins Challenges',
+  topic: 'Functions',
+  description: 'Functions Challenges',
   tasks: [
     NewTask()
-      .name("Actors & Films - 1")
-      .key('dmlactors1')
+      .name("Fullnames - 1")
+      .key('funcs01')
       .scaffold("-- Your Query Below --")
       .question(ExSet.ex1)
       .database('sakila01')
@@ -30,13 +30,13 @@ export const Exercises: ExercisePack = {
           })
         .skip()
       .evaluation("DML")
-        .test('Join-1')
+        .test('Fullname-1')
         .orderedEntries()
         .expectedData(ExSet.ex1data)
     .done(),
     NewTask()
-      .name("Customer Rentals - 2")
-      .key('customers02')
+      .name("Length Of Names - 2")
+      .key('funcs02')
       .scaffold("-- Your Query Below --")
       .question(ExSet.ex2)
       .database('sakila01')
@@ -53,13 +53,13 @@ export const Exercises: ExercisePack = {
           })
         .skip()
       .evaluation("DML")
-        .test('Join-1')
+        .test('Length-1')
         .orderedEntries()
         .expectedData(ExSet.ex2data)
     .done(),
     NewTask()
-      .name("Staff and Customers - 3")
-      .key('joins03')
+      .name("Capitalisation - 3")
+      .key('funcs03')
       .scaffold("-- Your Query Below --")
       .question(ExSet.ex3)
       .database('sakila01')
@@ -76,9 +76,10 @@ export const Exercises: ExercisePack = {
           })
         .skip()
       .evaluation("DML")
-        .test('StaffAndCustomers-1')
+        .test('Capitalisation-1')
         .orderedEntries()
         .expectedData(ExSet.ex3data)
     .done(),
   ]
 }
+

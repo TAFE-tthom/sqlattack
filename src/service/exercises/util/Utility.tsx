@@ -173,7 +173,7 @@ export async function OrderedEntriesEvaluationTest(
   const epctRows = expectedData.rows.map(r => TransformRow(r.row)
     .FormatRowAsCSVString());
 
-
+  console.log(resultData);
 
   const respTextOutput = FlattenRows(resultData
     .map(r => TransformRow(r.row).FormatRowAsCSVString()))
