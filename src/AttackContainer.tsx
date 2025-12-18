@@ -1,9 +1,9 @@
 import { SQLTask } from "./Task"
 import { KeyPrefixes, type StorageInstance } from "./Storage";
 import { RetrieveProgression } from './progression/Retrieve';
-import type { ReactElement } from "preact/compat";
+import { type ReactElement } from "preact/compat";
 import type { ExercisePack } from "./service/exercises/Defaults";
-import { useState } from "preact/hooks"
+import { useEffect, useRef, useState } from "preact/hooks"
 import './styles/AttackContainer.css';
 
 /**
@@ -72,6 +72,8 @@ export type SqlTaskSelectorProps = {
   parentData: SqlAttackContainerData
   setData: SetDataCallback
   storage: StorageInstance
+  visible: boolean
+  setVisible: (s: boolean) => void;
 }
 
 /**
@@ -86,6 +88,23 @@ export function SqlTaskSelectorColumn(props: SqlTaskSelectorProps) {
   const selected = data.selected;
   const currentPack = data.currentPack;
   const storage = props.storage;
+  const visibleState = props.visible;
+  const setVisible = props.setVisible;
+  
+  const isVisible = visibleState ?  'visible' : 'hidden';
+
+  useEffect(() => {
+    const handleRes = () => {
+      const docWidth = (document.getRootNode() as any)
+        .body.clientWidth;
+      if(docWidth > 700) {
+        setVisible(true);
+      }
+    };
+
+    window.addEventListener('resize', handleRes);
+    
+  });
 
   const progressKeys = props.parentData.exercises.map((pe) => {
     const exercises: Array<string> = [];
@@ -149,7 +168,7 @@ export function SqlTaskSelectorColumn(props: SqlTaskSelectorProps) {
   });
   
   
-  return (<nav className="taskSelectNav">
+  return (<nav className="taskSelectNav" style={{visibility: isVisible }}>
       <div className="taskListTitle">Exercises</div>
       <ul className="taskSelectNavList">
         {packItems}
@@ -160,6 +179,8 @@ export function SqlTaskSelectorColumn(props: SqlTaskSelectorProps) {
 export type SqlAttackTopBarProps = {
   storage: StorageInstance,
   exercises: Array<ExercisePack>
+  columnToggleState: boolean
+  columnToggleFn: (b: boolean) => void;
 }
 
 /**
@@ -186,9 +207,19 @@ export function SqlAttackTopBar(props: SqlAttackTopBarProps) {
 
   const storage = props.storage;
   const exercises = props.exercises;
+  const visibleState = props.columnToggleState;
+  const barRef: any = useRef(null);
+  const visibleFn = props.columnToggleFn;
+  
+
+  const exercisesVisible = () => {
+    console.log(barRef.current.offsetWidth);
+    visibleFn(!visibleState);
+  }
 
   return (
-    <div className={"sqlattackTopBar"}>
+    <div className={"sqlattackTopBar"} ref={barRef}>
+      <div className={"taskNavButton"} onClick={exercisesVisible}>☰</div>
       <span>SqlAttack</span>
       <RetrieveProgression storage={storage} exercises={exercises} />
     </div>
@@ -212,14 +243,17 @@ export function SqlAttackContainer(props: SqlAttackContainerProps) {
 
   } as SqlAttackContainerData);
 
+  const [columnState, setColumnState] = useState(false)
 
   return (<>
     <div className="sqlattackStack">
-      <SqlAttackTopBar storage={storage} exercises={data.exercises} />
+      <SqlAttackTopBar storage={storage} exercises={data.exercises}
+        columnToggleState={columnState} columnToggleFn={(d: boolean) => { setColumnState(d) }} />
       <div className="sqlattackContainer">
 
         <SqlTaskSelectorColumn parentData={data} storage={storage}
-          setData={(input: SqlAttackContainerData) => setData(input)} />
+          setData={(input: SqlAttackContainerData) => setData(input)} visible={columnState}
+          setVisible={setColumnState}/>
 
         <SqlTaskContainer parentData={data}
           setData={(input: SqlAttackContainerData) => setData(input)}
