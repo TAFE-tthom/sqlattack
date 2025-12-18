@@ -1,0 +1,30 @@
+[
+  {
+    "row": [
+      2,
+      "A piece of string",
+      0.5
+    ]
+  },
+  {
+    "row": [
+      3,
+      "Cola - With Sugar",
+      6.0
+    ]
+  },
+  {
+    "row": [
+      5,
+      "Jelly Beans (Not Edible)",
+      2.5
+    ]
+  },
+  {
+    "row": [
+      10,
+      "Blank CD",
+      13.5
+    ]
+  }
+]
