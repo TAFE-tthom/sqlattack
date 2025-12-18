@@ -7,7 +7,8 @@ You will need to query the following table and use the `FROM` keyword.
 The way that this is structured is:
 
 ```
-SELECT column_1, column_2, ... FROM table_1, ...
+SELECT column_1, column_2,
+  ... FROM table_1, ...
 ```
 
 The above snippet is mostly outlining the format that is expected by SQL. You can omit the columns and retrieve **ALL** columns using the `*` symbol.

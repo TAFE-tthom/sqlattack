@@ -8,6 +8,8 @@ import { IntroExercises }
 
 import { UsersDB }
   from '../../samples/UsersDB';
+import { ActiveUsersDB }
+  from '../../samples/ActiveUsersDB';
 import { SqliteCommands } from '../../SQLiteProxy';
 
 
@@ -63,6 +65,43 @@ export const Exercises: ExercisePack = {
         .test('queryingdb-1')
         .orderedEntries()
         .expectedData(IntroExercises.intr3_data)
+    .done(),
+    NewTask()
+      .name("Aliasing - 4")
+      .key('intr4')
+      .scaffold("-- Your Query Here --")
+      .question(IntroExercises.intr4)
+      .database('queryingdb03')
+      .setup()
+      .skip()
+      .evaluation("DML")
+        .test('queryingdb-1')
+        .orderedEntriesWithColumnCheck()
+        .expectedData(IntroExercises.intr4_data)
+        .columns(['Greeting'])
+    .done(),
+    NewTask()
+      .name("WHERE - 5")
+      .key('intr5')
+      .scaffold("-- Your Query Here --")
+      .question(IntroExercises.intr5)
+      .database('queryingdb04')
+      .setup()
+        .add({
+          command: SqliteCommands.Exec,
+          operation: ActiveUsersDB.getSchema(),
+          extra: []
+        })
+        .add({
+          command: SqliteCommands.Exec,
+          operation: ActiveUsersDB.getInsertData(),
+          extra: []
+        })
+      .skip()
+      .evaluation("DML")
+        .test('queryingdb-1')
+        .orderedEntries()
+        .expectedData(IntroExercises.intr5_data)
     .done(),
   ]
 }

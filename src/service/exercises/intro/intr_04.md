@@ -1,48 +1,23 @@
 
-## DataTypes - Text
+## Column Names and Alias
 
-As with most programming languages we have a way we categorise data. SQL is no different in this case, depending on what data you want to record, you want to select and use most suitable datatype to represent this.
+We will introduce a new keyword that is useful for more complex queries but also naming your columns. We may want to appropriately name the column we are retrieving. We can use the `AS` keyword after specifying the column name to give it **another name**.
 
-Each datatype has suitable operators associated with it. We will look at the TEXT datatypes now.
+While this exercise will be a trivial example, you may encounter a task where it may want you to print the **Fullname** of a customer.
 
-### Text
-
-For text data, this is usually expressed between single quotes like so:
 
 ```sql
-'This is text'
+SELECT 'Hello' as Greeting;
 ```
 
-And the following data types are appropriate:
+It will show `Greeting` as the column name and 'Hello' one of the entries below.
 
-* `CHAR(size)` - Fixed number of characters
+A real world example would look like this.
 
-* `VARCHAR(size)` - Up to the number of characters.
+```sql
+SELECT CONCAT(first_name, ' ',
+  last_name) AS Fullname
+  FROM Customer;
+```
 
-* `TEXT` - Arbitrary size
-
-### Operators
-
-* `||` - For concatenation.
-
-Within `sqlite`, the operator used for concatenation is `||`, however and what you will learn is that operators are not **universal** with sql.
-
-Within `sqlite`, there is typically a preference to use `functions` over `operators`
-
-### Exercise
-
-Use `||` to concatenate the words:
-
-* `Mr`
-* `Jeff`
-* `Davidson`
-
-The resulting output should be:
-
-`Mr Jeff Davidson`
-
-You will need to ensure you have spaces between each word.
-
----
-
-Introduction set of exercises expose some basic functions and constructions with SQL.
+This will output `fist_name` and `last_name`, separated by a space under a single column called `Fullname`.

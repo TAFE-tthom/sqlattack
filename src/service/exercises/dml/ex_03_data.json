@@ -1,0 +1,44 @@
+[
+  {
+    "row": [
+      2,
+      "A piece of string",
+      0.5
+    ]
+  },
+  {
+    "row": [
+      3,
+      "Cola - With Sugar",
+      6.0
+    ]
+  },
+  {
+    "row": [
+      5,
+      "Jelly Beans (Not Edible)",
+      2.5
+    ]
+  },
+  {
+    "row": [
+      10,
+      "Blank CD",
+      13.5
+    ]
+  },
+  {
+    "row": [
+      12,
+      "Blank DVD",
+      12.25
+    ]
+  },
+  {
+    "row": [
+      89,
+      "8GB DDR3 Ram (3200mhz)",
+      760.5
+    ]
+  }
+]

@@ -6,6 +6,7 @@ import {
   from './Utility';
 
 import {
+    ColumnNames,
     EvaluationTest,
   ResultRow,
   TaskSetupTuple
@@ -18,6 +19,7 @@ const EvalInitState = function(
     test: '',
     oper: (() => { }) as any,
     rows: [] as Array<ResultRow>,
+    columns: [] as ColumnNames,
     extra: [] as Array<any>
   };
 
@@ -26,6 +28,12 @@ const EvalInitState = function(
     tests.push(stateData);
     return {
       next: () => EvalInitState(tests),
+      columns: (names: Array<string>) => {
+        stateData.columns = names;
+        return {
+          done: () => tests
+        }
+      },
       done: () => tests
     };
   }
@@ -103,6 +111,7 @@ const EvalTaskInitState = function(
     test: '',
     oper: (() => { }) as any,
     rows: [] as Array<ResultRow>,
+    columns: [] as ColumnNames,
     extra: [] as Array<any>
   };
 
@@ -111,6 +120,12 @@ const EvalTaskInitState = function(
     task.evaluation.evaldata.push(stateData);
     return {
       next: () => EvalTaskInitState(task),
+      columns: (names: Array<string>) => {
+        stateData.columns = names;
+        return {
+          done: () => task
+        }
+      },
       done: () => task
     };
   }
@@ -175,6 +190,14 @@ const EvalTaskInitState = function(
           }
         },
         orderedEntries: () => {
+          stateData.oper
+            = OrderedEntriesEvaluationTest;
+
+          return {
+            expectedData
+          }
+        },
+        orderedEntriesWithColumnCheck: () => {
           stateData.oper
             = OrderedEntriesEvaluationTest;
 

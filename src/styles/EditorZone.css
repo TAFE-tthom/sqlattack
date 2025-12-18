@@ -6,6 +6,38 @@
   min-width: 350px;
 }
 
+@media (max-width: 700px) {
+
+  .editorZone {
+    width: 100%;
+    border-top: 2px solid #444444;
+    display: flex;
+    flex-direction: column;
+    flex: 4;
+    min-width: 350px;
+  }
+
+  .attackEditor {
+    display: flex;
+    flex-direction: column;
+    border-top: 2px #2a2a2a solid;
+    min-height: 400px;
+    max-height: 400px;
+    flex: 1;
+  }
+
+  .cm-editor {
+    min-height: 400px;
+    max-height: 400px;
+    overflow: scroll;
+  }
+
+  .cm-editor {
+    max-height: 400px;
+  }
+
+}
+
 .attackEditor {
   display: flex;
   flex-direction: column;

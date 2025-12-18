@@ -1,6 +1,6 @@
 // @ts-ignore
 import { sqlite3Worker1Promiser } from "@sqlite.org/sqlite-wasm"
-import type { DatabaseProxy, ResultEntry, ResultRow, TaskEvaluationResult, TaskPackage, TaskSubmissionEvaluator } from './TaskAggregate';
+import type { ColumnNames, DatabaseProxy, ResultEntry, ResultRow, TaskEvaluationResult, TaskPackage, TaskSubmissionEvaluator } from './TaskAggregate';
 
 
 export type CheckCallback = (outcome: TaskEvaluationResult) => void; 
@@ -129,10 +129,16 @@ export class SqliteProxy implements DatabaseProxy {
     this.syncIdMap();
   }
 
+  /**
+   * Gets the database ID map
+   */
   getDatabaseIDMap() {
     return this.databaseIdMap;
   }
 
+  /**
+   * Synchronises the ID map
+   */
   syncIdMap() {
     const {scaffold, submission, sketch } = this.variations();
     this.databaseIdMap = {
@@ -388,6 +394,8 @@ export class SqliteProxy implements DatabaseProxy {
     dbId: string):
     Promise<TaskEvaluationResult> {
 
+    let columnNamesSet = false;
+    let columnnames: ColumnNames = [];
     const channel = this.getChannel();
     const returnedData: Array<ResultRow> = [];
     // Communicates to the database
@@ -395,7 +403,12 @@ export class SqliteProxy implements DatabaseProxy {
     await channel(SqliteCommands.Exec, {
       dbId, sql: userAnswer,
       callback: (result: any) => {
+        
         if(result.row) {
+          if(!columnNamesSet) {
+            columnNamesSet = true;
+            columnnames = result.columns;
+          }
           const rowData: ResultRow = {row: []};
           for(let i = 0; i < result.row.length; i++) {
             const r = result.row[i];
@@ -411,7 +424,7 @@ export class SqliteProxy implements DatabaseProxy {
     // Evaluates against the set of tests
     for(const t of evalTests) {
       const evaloper = t.oper;
-      const resultEntry = await evaloper(returnedData,
+      const resultEntry = await evaloper(columnnames, returnedData,
         t, this);
       resultEntries.push(resultEntry);
 

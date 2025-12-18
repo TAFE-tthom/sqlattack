@@ -11,3 +11,10 @@
   background-color: #0a0b16;
   min-width: 350px;
 }
+
+@media (max-width: 700px) {
+
+  .sqlQuestionView {
+    min-height: 500px;
+  }
+}

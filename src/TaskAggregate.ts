@@ -75,11 +75,15 @@ export type TaskOperation = (
   resultData: Array<ResultRow>,
   data: TaskSubmissionEvaluator) => TaskEvaluationResult;
 
+
+export type ColumnNames = Array<string>
+
 /**
  * EvaluationOperation, used to create individual tests
  * and the expected data from it
  */
 export type EvaluationOperation = (
+  columnNames: ColumnNames,
   resultData: Array<ResultRow>,
   testData: EvaluationTest,
   dbProxy: DatabaseProxy) => Promise<ResultEntry>
@@ -95,6 +99,7 @@ export type EvaluationTest = {
   test: string
   oper: EvaluationOperation
   rows: Array<ResultRow>
+  columns: ColumnNames
   extra: Array<any>
 }
 

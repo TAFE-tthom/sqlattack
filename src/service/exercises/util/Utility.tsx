@@ -1,6 +1,6 @@
 
 import { ReactElement } from 'preact/compat';
-import { DatabaseProxy, EvaluationTest, ResultEntry, ResultRow }
+import { ColumnNames, DatabaseProxy, EvaluationTest, ResultEntry, ResultRow }
   from '../../../TaskAggregate';
 import { diffChars } from 'diff';
 import React from 'react';
@@ -85,13 +85,33 @@ export function StringArrayToString(
   return s;
 }
 
+/**
+ * OrderedEntriesEvaluation + Checks if the column names are correct
+ */
+export async function OrderedEntriesEvaluationWithColumnNameTest(
+  columns: ColumnNames,
+  resultData: Array<ResultRow>,
+  expectedData: EvaluationTest,
+  dbProxy: DatabaseProxy): Promise<ResultEntry> {
 
+  // Transforms it and pushes it into the output to be compared
+  resultData.unshift({
+    row: columns
+  });
+
+  expectedData.rows.unshift({
+    row: expectedData.columns
+  });
+
+  return OrderedEntriesEvaluationTest(columns, resultData, expectedData, dbProxy);
+} 
 
 /**
  * This function is used to throw data at
  * construction and check to see if it is working
  */
 export async function TableConstructionEvaluation(
+  columns: ColumnNames,
   _resultData: Array<ResultRow>,
   expectedData: EvaluationTest,
   dbProxy: DatabaseProxy): Promise<ResultEntry> {
@@ -118,7 +138,7 @@ export async function TableConstructionEvaluation(
       
     }
   }
-  return OrderedEntriesEvaluationTest(results, expectedData, dbProxy);
+  return OrderedEntriesEvaluationTest(columns, results, expectedData, dbProxy);
 }
 
 /**
@@ -126,6 +146,7 @@ export async function TableConstructionEvaluation(
  * is returned matches the expected order.
  */
 export async function OrderedEntriesEvaluationTest(
+  _columns: ColumnNames,
   resultData: Array<ResultRow>,
   expectedData: EvaluationTest,
   _dbProxy: DatabaseProxy): Promise<ResultEntry> {
@@ -204,6 +225,7 @@ export async function OrderedEntriesEvaluationTest(
  * of the expected
  */
 export async function FirstEntryEvaluationTest(
+  _columns: ColumnNames,
   resultData: Array<ResultRow>,
   expectedData: EvaluationTest,
   _dbProxy: DatabaseProxy) {
