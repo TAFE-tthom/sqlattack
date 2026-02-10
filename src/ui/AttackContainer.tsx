@@ -1,10 +1,10 @@
 import { SQLTask } from "./Task"
-import { KeyPrefixes, type StorageInstance } from "./Storage";
-import { RetrieveProgression } from './progression/Retrieve';
+import { KeyPrefixes, type StorageInstance } from "../service/Storage";
+import { RetrieveProgression } from './Retrieve';
 import { type ReactElement } from "preact/compat";
-import type { ExercisePack } from "./service/exercises/Defaults";
+import { type ExercisePack } from "../service/exercises/Defaults";
 import { useEffect, useRef, useState } from "preact/hooks"
-import './styles/AttackContainer.css';
+import '../styles/AttackContainer.css';
 
 /**
  * SetData callback, used to update and trigger

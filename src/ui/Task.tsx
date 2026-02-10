@@ -1,11 +1,11 @@
-import { useEffect, useState } from "preact/hooks"
-import { SqliteProxy } from "./SQLiteProxy"
-import type { TaskPackage } from "./TaskAggregate"
+import { SqliteProxy } from "../sql/SQLiteProxy"
+import type { TaskPackage } from "../objs/TaskAggregate"
 import { QuestionView } from "./Question"
 import { EditorZone } from "./EditorZone"
+import type { StorageInstance } from "../service/Storage"
+import { useEffect, useState } from "preact/hooks"
 
 import './styles/Task.css';
-import type { StorageInstance } from "./Storage"
 
 /**
  * Props, when selected the user should

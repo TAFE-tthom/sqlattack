@@ -1,16 +1,17 @@
 
-import { loadLanguage, langs } from '@uiw/codemirror-extensions-langs';
 import CodeMirror, { ViewUpdate } from '@uiw/react-codemirror'; 
+import { loadLanguage, langs } from '@uiw/codemirror-extensions-langs';
 import { tokyoNight as THEME } from '@uiw/codemirror-themes-all';
 import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
-import type { ResultEntry, TaskPackage, TaskSubmissionEvaluator } from './TaskAggregate';
-import type { StorageInstance } from './Storage';
-import './styles/EditorZone.css';
-import type { SqliteProxy } from './SQLiteProxy';
-import { ReactElement } from 'preact/compat';
-import { FlattenRows, FormatRowAsCSVString } from './service/exercises/util/Utility';
 
+import type { ResultEntry, TaskPackage, TaskSubmissionEvaluator } from '../objs/TaskAggregate';
+import type { StorageInstance } from '../service/Storage';
+import type { SqliteProxy } from '../sql/SQLiteProxy';
+import { ReactElement } from 'preact/compat';
+import { FlattenRows, FormatRowAsCSVString } from '../service/exercises/util/Utility';
 import { EditorView } from '@uiw/react-codemirror';
+
+import '../styles/EditorZone.css';
 
 /**
  * Feedback from evaluator

@@ -1,13 +1,13 @@
-import { StorageInstance } from '../Storage';
 
+import { StorageInstance } from '../service/Storage';
 import type { ExercisePack } from "../service/exercises/Defaults";
-import "../styles/RetrieveProgression.css";
 
 export type ProgressionProps = {
   storage: StorageInstance
   exercises: Array<ExercisePack>
 }
 
+import "../styles/RetrieveProgression.css";
 
 /**
  * Retrieves the progression from local storage

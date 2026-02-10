@@ -1,5 +1,5 @@
 import type { ReactElement } from "preact/compat";
-import { DatabaseIDMap } from "./SQLiteProxy";
+import { DatabaseIDMap } from "../sql/SQLiteProxy";
 
 /**
  * Database Proxy interface

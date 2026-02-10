@@ -1,7 +1,7 @@
 
-import { SqliteProxy } from "./SQLiteProxy";
+import { SqliteProxy } from "../sql/SQLiteProxy";
 
-import type { SampleDatabase } from './samples/SampleDatabase';
+import type { SampleDatabase } from '../samples/SampleDatabase';
 
 /**
  * SampleLoader that will load a SampleDatabase

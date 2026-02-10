@@ -1,7 +1,7 @@
 import remarkGfm from 'remark-gfm'; 
 import ReactMarkdown from 'react-markdown';
 
-import './styles/QuestionView.css';
+import '../styles/QuestionView.css';
 
 /**
  * QuestionViewProps

@@ -1,6 +1,6 @@
 // @ts-ignore
 import { sqlite3Worker1Promiser } from "@sqlite.org/sqlite-wasm"
-import type { ColumnNames, DatabaseProxy, ResultEntry, ResultRow, TaskEvaluationResult, TaskPackage, TaskSubmissionEvaluator } from './TaskAggregate';
+import type { ColumnNames, DatabaseProxy, ResultEntry, ResultRow, TaskEvaluationResult, TaskPackage, TaskSubmissionEvaluator } from '../objs/TaskAggregate';
 
 
 export type CheckCallback = (outcome: TaskEvaluationResult) => void; 
