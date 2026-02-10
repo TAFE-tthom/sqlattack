@@ -1,9 +1,7 @@
 import { ExercisePack } from './Defaults';
-import { NewTask } from './util/EvalMaker';
-
-import { AggregateExercises as ExSet }
-  from './aggrs/Exported.ts'
-import { SqliteCommands } from '../../SQLiteProxy.ts';
+import { NewTask } from './taskutil/EvalMaker';
+import { AggregateExercises as ExSet } from './taskdata/aggrs/Exported.ts'
+import { SqliteCommands } from '../../sql/SQLiteProxy.ts';
 import { SakilaDatabase }
   from '../../samples/Sakila.ts';
 

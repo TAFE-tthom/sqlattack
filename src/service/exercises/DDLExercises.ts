@@ -1,12 +1,8 @@
 import { ExercisePack } from './Defaults';
-import { NewTask } from './util/EvalMaker';
-
-import { DDLExercises as ExSet }
-  from './ddl/Exported.ts'
-
-import { PointOfSaleDB }
-  from '../../samples/PointOfSaleDB.ts'
-import { SqliteCommands } from '../../SQLiteProxy.ts';
+import { NewTask } from './taskutil/EvalMaker';
+import { DDLExercises as ExSet } from './taskdata/ddl/Exported.ts'
+import { PointOfSaleDB } from '../../samples/PointOfSaleDB.ts'
+import { SqliteCommands } from '../../sql/SQLiteProxy.ts';
 
 export const Exercises: ExercisePack = {
   topic: 'DDL',

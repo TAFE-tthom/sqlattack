@@ -5,7 +5,7 @@ import { EditorZone } from "./EditorZone"
 import type { StorageInstance } from "../service/Storage"
 import { useEffect, useState } from "preact/hooks"
 
-import './styles/Task.css';
+import '../styles/Task.css';
 
 /**
  * Props, when selected the user should

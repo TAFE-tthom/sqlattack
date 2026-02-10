@@ -1,10 +1,8 @@
 import { ExercisePack } from './Defaults';
-import { NewTask } from './util/EvalMaker';
-import { PointOfSaleDB }
-  from '../../samples/PointOfSaleDB';
-import { SqliteCommands } from '../../SQLiteProxy';
-
-import { DMLExercises } from './dml/Exported.ts'
+import { NewTask } from './taskutil/EvalMaker';
+import { PointOfSaleDB } from '../../samples/PointOfSaleDB';
+import { SqliteCommands } from '../../sql/SQLiteProxy';
+import { DMLExercises } from './taskdata/dml/Exported.ts'
 
 export const Exercises: ExercisePack = {
   topic: 'DML',

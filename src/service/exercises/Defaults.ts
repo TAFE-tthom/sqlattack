@@ -1,5 +1,4 @@
-import { TaskPackage } from '../../TaskAggregate';
-
+import { TaskPackage } from '../../objs/TaskAggregate';
 import { Exercises as IntroPack } from './IntroExercises.ts'
 import { Exercises as DQLPack } from './DQLExercises.ts'
 import { Exercises as DDLPack } from './DDLExercises.ts'

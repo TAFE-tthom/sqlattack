@@ -1,10 +1,7 @@
 import { ExercisePack } from './Defaults';
-import { NewTask } from './util/EvalMaker';
-
-
-
-import { FuncsExercises as ExSet } from './funcs/Exported.ts'
-import { SqliteCommands } from '../../SQLiteProxy.ts';
+import { NewTask } from './taskutil/EvalMaker';
+import { FuncsExercises as ExSet } from './taskdata/funcs/Exported.ts'
+import { SqliteCommands } from '../../sql/SQLiteProxy.ts';
 import { SakilaDatabase } from '../../samples/Sakila.ts';
 
 export const Exercises: ExercisePack = {

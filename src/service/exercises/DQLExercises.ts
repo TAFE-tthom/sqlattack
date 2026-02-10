@@ -1,9 +1,8 @@
 import { ExercisePack } from './Defaults';
-import { NewTask } from './util/EvalMaker';
+import { NewTask } from './taskutil/EvalMaker';
 import { SakilaDatabase } from '../../samples/Sakila'
-import { SqliteCommands } from '../../SQLiteProxy';
-
-import { DQLExercises } from './dql/Exported.ts'
+import { SqliteCommands } from '../../sql/SQLiteProxy';
+import { DQLExercises } from './taskdata/dql/Exported.ts'
 
 export const Exercises: ExercisePack = {
   topic: 'DQL',

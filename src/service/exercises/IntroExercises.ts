@@ -1,16 +1,9 @@
 import { ExercisePack } from './Defaults';
-
-import { NewTask }
-  from './util/EvalMaker';
-
-import { IntroExercises }
-  from './intro/Exported';
-
-import { UsersDB }
-  from '../../samples/UsersDB';
-import { ActiveUsersDB }
-  from '../../samples/ActiveUsersDB';
-import { SqliteCommands } from '../../SQLiteProxy';
+import { NewTask } from './taskutil/EvalMaker';
+import { IntroExercises } from './taskdata/intro/Exported';
+import { UsersDB } from '../../samples/UsersDB';
+import { ActiveUsersDB } from '../../samples/ActiveUsersDB';
+import { SqliteCommands } from '../../sql/SQLiteProxy';
 
 
 export const Exercises: ExercisePack = {
