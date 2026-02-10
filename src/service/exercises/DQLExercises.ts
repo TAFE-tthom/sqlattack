@@ -142,7 +142,7 @@ export const Exercises: ExercisePack = {
           })
         .skip()
       .evaluation("DQL")
-        .test('-1')
+        .test('AllenActors-1')
         .orderedEntries()
         .expectedData(DQLExercises.dql6json)
     .done(),
@@ -165,7 +165,7 @@ export const Exercises: ExercisePack = {
           })
         .skip()
       .evaluation("DQL")
-        .test('Store2Custoemrs-1')
+        .test('Store2Customers-1')
         .orderedEntries()
         .expectedData(DQLExercises.dql7json)
     .done(),

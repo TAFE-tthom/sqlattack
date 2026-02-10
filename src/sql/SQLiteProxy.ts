@@ -361,8 +361,9 @@ export class SqliteProxy implements DatabaseProxy {
         
     await this.resetSubmissionDB();
 
-    await this.resetQuery(resetQuery, this.getDatabaseSubmissionId());
-    
+    if(resetQuery !== '') {
+      await this.resetQuery(resetQuery, this.getDatabaseSubmissionId());
+    }
 
     return this.queryEvalution(userAnswer, evaluator, 
       this.getDatabaseSubmissionId());
