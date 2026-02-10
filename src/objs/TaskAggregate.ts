@@ -1,5 +1,6 @@
 import type { ReactElement } from "preact/compat";
 import { DatabaseIDMap } from "../sql/SQLiteProxy";
+import { PreprocessorObject } from './Preprocess';
 
 /**
  * Database Proxy interface
@@ -137,6 +138,8 @@ export type TaskPackage = {
   scaffold: string
   questionMd: string
   database: string
+  resetQuery: string
+  preprocessObjs: Array<PreprocessorObject>
   setup: Array<TaskSetupTuple>
   evaluation: TaskSubmissionEvaluator
 }

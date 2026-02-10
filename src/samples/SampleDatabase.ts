@@ -19,6 +19,8 @@ export interface SampleDatabase {
 
   getName(): string;
 
+  getReset(): string;
+
   getSchema(): string;
 
   getInsertData(): string;

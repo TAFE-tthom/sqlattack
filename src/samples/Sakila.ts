@@ -18,6 +18,10 @@ export const SakilaDatabase: SampleDatabase = {
     return DATA;
   },
 
+  getReset() {
+    return '';
+  },
+
   requirements() {
     return {
       schema: true,

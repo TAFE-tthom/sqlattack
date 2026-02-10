@@ -347,14 +347,29 @@ export class SqliteProxy implements DatabaseProxy {
   /**
    * Moved logic to queryEvaluation, returns the required data
    */
-  async check(userAnswer: string, evaluator: TaskSubmissionEvaluator)
+  async check(userAnswerRaw: string, evaluator: TaskSubmissionEvaluator)
     :Promise<TaskEvaluationResult> {
     // Sync the scaffold and submission DB
+    const preprocesObjs = this.package.preprocessObjs;
+    const resetQuery = this.package.resetQuery;
+    console.log(resetQuery);
 
+    let userAnswer = userAnswerRaw;
+    for(const pobj of preprocesObjs) {
+      userAnswer = pobj.operateOn(userAnswer);
+    }
+        
     await this.resetSubmissionDB();
+
+    await this.resetQuery(resetQuery, this.getDatabaseSubmissionId());
+    
 
     return this.queryEvalution(userAnswer, evaluator, 
       this.getDatabaseSubmissionId());
+  }
+
+  async resetQuery(statements: string, dbId: string) {
+    return await this.execute(statements, dbId);
   }
 
   /**
@@ -426,9 +441,7 @@ export class SqliteProxy implements DatabaseProxy {
       const evaloper = t.oper;
       const resultEntry = await evaloper(columnnames, returnedData,
         t, this);
-      resultEntries.push(resultEntry);
-
-    
+      resultEntries.push(resultEntry);    
     }
     
     // Final results from the evaluation
@@ -471,14 +484,11 @@ export class SqliteProxy implements DatabaseProxy {
     return this.databaseIdMap.submission.dbId;
   }
 
-
-  getDatabaseSketchId() {
-    
+  getDatabaseSketchId() {    
     return this.databaseIdMap.sketch.dbId;
   }
 
   getDatabaseScaffoldId() {
-    
     return this.databaseIdMap.scaffold.dbId;
   }
 
@@ -605,15 +615,13 @@ export class SqliteProxy implements DatabaseProxy {
    */
   async syncSubmissionToScaffold() {
     
-    const {scaffold, submission} = this.variations();
+    const { scaffold, submission } = this.variations();
 
     try {
-      
       const root = await navigator.storage.getDirectory();
       const submFile = await (await root
         .getFileHandle(submission))
         .getFile();
-
       
       const scafFile = await (await root.getFileHandle(scaffold,
         {create: true}))

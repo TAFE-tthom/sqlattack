@@ -17,6 +17,7 @@ import '../styles/EditorZone.css';
  * Feedback from evaluator
  */
 export type ResultsFeedbackProps = {
+  questionIdent: string
   runningSubmission: boolean
   results: Array<ResultEntry>
   available: boolean
@@ -84,15 +85,16 @@ export function FeedbackSegment(props: FeedbackProps) {
 
   const [feedbackOn, setFeedbackOn] = useState(false);
   const [selectedPanel, setSelectedPanel] = useState(0);
+  const passed = props.passed;
   const name = props.test;
   const passText = props.passed ? '✓' : '✘';
   const style = props.passed ? "resultPass" : "resultFailed";
 
-  const diffString = props.diffString;
   const actualString = props.actual;
   const expectedString = props.expected;
   
   const visibleState = feedbackOn ? "flex" : "none";
+  const diffString = passed ? 'No Difference' : props.diffString;
 
   const toggleExpandClick = () => {
     const toggle = !feedbackOn;
@@ -106,15 +108,21 @@ export function FeedbackSegment(props: FeedbackProps) {
 
   const feedbackOutput = selectedPanel === 0 ? actualString
     : selectedPanel === 1 ? expectedString
-    : selectedPanel === 2 ? diffString : '';
+    : selectedPanel === 2 ? <>{diffString}</> : '';
 
   const usualDiff = selectedPanel !== 2 ?
     <pre className={"feedbackDiff"} style={{display: visibleState }}>
         {feedbackOutput}
     </pre> :
+    actualString !== '' ?
     <div className={"feedbackDiff"} style={{display: visibleState }}>
         {feedbackOutput}
-    </div>
+    </div> :
+    <pre className={"feedbackDiff"}
+      style={{display: visibleState, color: 'red' }}>
+        {expectedString}
+    </pre>;
+  
   return (
     <li className={`${style}`} onClick={toggleExpandClick}>
       <div className={"feedbackDiffTitle"} >
@@ -145,7 +153,6 @@ export function FeedbackSegment(props: FeedbackProps) {
  * from the checker
  */
 export function ResultsFeedback(props: ResultsFeedbackProps) {
-
   const runningSubmission = props.runningSubmission;
   const isError = props.error;
   const isAvailable = props.available;
@@ -205,23 +212,11 @@ export function EditorZone(props: EditorZoneProps) {
   const evaluator = props.evaluator;
   const editorRef = useRef(null);
 
+  const questionIdent = `${props.pkg.name}::${props.pkg.key}`;
   
   const [answer, setAnswer] = useState(pkg.scaffold);
   const [runningSubmission, setRunningSubmission] = useState(false);
 
-  useEffect(() => {
-    const previousSolution =
-      storage.getSubmission(taskkey);
-
-    if(previousSolution) {
-      setAnswer(previousSolution.code);
-      
-    } else {
-      setAnswer(pkg.scaffold);
-    }
-    
-  }, [taskkey]);
-  
   const [results, setResults] = useState({
     results: [] as Array<ResultEntry>,
     available: false,
@@ -239,6 +234,30 @@ export function EditorZone(props: EditorZoneProps) {
     released: false
   })
 
+  useEffect(() => {
+    const previousSolution =
+      storage.getSubmission(taskkey);
+
+    if(previousSolution) {
+      setAnswer(previousSolution.code);
+      
+    } else {
+      setAnswer(pkg.scaffold);
+    }
+    
+  }, [taskkey]);
+
+
+  useEffect(() => {
+    setResults({
+      results: [] as Array<ResultEntry>,
+      available: false,
+      error: false,
+      errorMessage: '',
+      queryOnly: false,
+      queryOutput: '',
+    })
+  }, [taskkey])
   
   const onAnswerChange = useCallback((val: string,
       _viewUpdate: ViewUpdate) => {
@@ -253,9 +272,11 @@ export function EditorZone(props: EditorZoneProps) {
 
     const proxy = dbproxy;
     let success = false;
+
     
     storage.saveSubmission(taskkey, { code: answer });
     setRunningSubmission(true);
+
     try {
       // NOTE: This is where it is tested
       const userResults = await proxy
@@ -410,6 +431,7 @@ export function EditorZone(props: EditorZoneProps) {
     </div>
     <div className="attackResults">
       <ResultsFeedback
+        questionIdent={questionIdent}
         runningSubmission={runningSubmission}
         results={results.results}
         error={results.error}

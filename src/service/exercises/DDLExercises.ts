@@ -3,6 +3,7 @@ import { NewTask } from './taskutil/EvalMaker';
 import { DDLExercises as ExSet } from './taskdata/ddl/Exported.ts'
 import { PointOfSaleDB } from '../../samples/PointOfSaleDB.ts'
 import { SqliteCommands } from '../../sql/SQLiteProxy.ts';
+import { TextReplacementPreprocessor } from './taskutil/Preprocess.ts';
 
 export const Exercises: ExercisePack = {
   topic: 'DDL',
@@ -53,6 +54,10 @@ export const Exercises: ExercisePack = {
       .scaffold("-- Your Query Below --")
       .question(ExSet.ex3)
       .database('autoincr01')
+      .preprocess(TextReplacementPreprocessor.Start()
+        .add(' AUTO_INCREMENT PRIMARY KEY', ' PRIMARY KEY AUTO_INCREMENT')
+        .add(' AUTO_INCREMENT', ' AUTOINCREMENT')
+        .build())
       .setup()
       .skip()
       .evaluation("DML")
@@ -98,7 +103,7 @@ export const Exercises: ExercisePack = {
       .scaffold("-- Your Query Below --")
       .question(ExSet.ex5)
       .database('pointofsale02')
-      .setup()
+      .setupWithReset(PointOfSaleDB.getReset())
         .add({
             command: SqliteCommands.Exec,
             operation: PointOfSaleDB.getSchema(),
@@ -108,7 +113,7 @@ export const Exercises: ExercisePack = {
       .evaluation("DDL")
         .test('AlterTable-1')
         .constructionEval()
-        .selectStatement(`
+        .selectStatementWithContains(`
             SELECT * FROM sqlite_schema
             WHERE type='table' AND
             name = 'Product';

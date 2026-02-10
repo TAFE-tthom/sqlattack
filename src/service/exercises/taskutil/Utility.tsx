@@ -1,10 +1,11 @@
 
-import { ReactElement } from 'preact/compat';
-import { ColumnNames, DatabaseProxy, EvaluationTest, ResultEntry, ResultRow }
-  from '../../../TaskAggregate';
-import { diffChars } from 'diff';
 import React from 'react';
+import { ReactElement } from 'preact/compat';
 
+import { ColumnNames, DatabaseProxy, EvaluationTest, ResultEntry, ResultRow }
+  from '../../../objs/TaskAggregate';
+
+import { diffChars } from 'diff';
 
 /**
  * Allows for transforming the row by taking the row
@@ -120,7 +121,8 @@ export async function OrderedEntriesEvaluationWithColumnNameTest(
     row: expectedData.columns
   });
 
-  return OrderedEntriesEvaluationTest(columns, resultData, expectedData, dbProxy);
+  return OrderedEntriesEvaluationTest(columns, resultData,
+    expectedData, dbProxy);
 } 
 
 /**
@@ -138,6 +140,7 @@ export async function TableConstructionEvaluation(
   const dbMap = dbProxy.getDatabaseIDMap();
   const queries = expectedData.extra;
   let results: Array<ResultRow> = [];
+  let evalfn = OrderedEntriesEvaluationTest;
 
   for(const q of queries) {
     const meta = q as any;
@@ -153,9 +156,53 @@ export async function TableConstructionEvaluation(
       
       results = await dbProxy.query(statements);
       
+    } else if(meta.kind === 'SELECT_CONTAINS') {
+      // Last one, get the results out
+      // What should we do? Use .check?
+      const statements = q.query;
+      results = await dbProxy.query(statements);
+      evalfn = OrderedFuzzyContainsCheck;
     }
   }
-  return OrderedEntriesEvaluationTest(columns, results, expectedData, dbProxy);
+  
+  
+  return await evalfn(columns, results, expectedData, dbProxy);
+}
+
+export async function OrderedFuzzyContainsCheck(
+  _columns: ColumnNames,
+  resultData: Array<ResultRow>,
+  expectedData: EvaluationTest,
+  _dbProxy: DatabaseProxy): Promise<ResultEntry> {
+
+  
+  const respTextOutput = FlattenRows(resultData
+    .map(r => TransformRow(r.row).FormatRowAsCSVString()))
+  
+  const matchRows = expectedData.rows;
+
+  let result = true;
+
+  for(const entry of matchRows) {
+    for(const r of entry.row) {
+    
+      const res = respTextOutput.includes(r);
+      result = result && res;
+      
+    }
+  }
+
+  const actual = result ? 'Table Check Passed' : 'Table Check Failed';
+  const expected = 'Table Check Passed';
+  const diffData = [<>{expected}</>];
+
+  return ({
+    test: expectedData.test,
+    actual: actual,
+    expected: expected,
+    passed: result,
+    diffData,
+  })
 }
 
 /**
@@ -233,7 +280,6 @@ export async function OrderedEntriesEvaluationTest(
     expected: epctTextOutput,
     passed: result,
     diffData,
-    
   }
 }
 

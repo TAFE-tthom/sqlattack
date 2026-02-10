@@ -27,6 +27,10 @@ export const ActiveUsersDB: SampleDatabase = {
     return SCHEMA;
   },
 
+  getReset() {
+    return '';
+  },
+
   getInsertData(): string {
     return DATA;
   },

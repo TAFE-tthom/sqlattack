@@ -101,9 +101,7 @@ export function SqlTaskSelectorColumn(props: SqlTaskSelectorProps) {
         setVisible(true);
       }
     };
-
     window.addEventListener('resize', handleRes);
-    
   });
 
   const progressKeys = props.parentData.exercises.map((pe) => {
@@ -147,8 +145,9 @@ export function SqlTaskSelectorColumn(props: SqlTaskSelectorProps) {
           && selectedPack === currentPack) ? "taskSelectNavItemSoftChosen" :
           "taskSelectNavItemSoft";
         return (<>
-          <li key={`navitem_extra_${idx}`} onClick={() => buttonSelect(idx, i)}
-          className={`${selectedItemStyle}`}>
+          <li key={`navitem_extra_${idx}`}
+            onClick={() => buttonSelect(idx, i)}
+            className={`${selectedItemStyle}`}>
             {e.name}
           </li>
           </>)

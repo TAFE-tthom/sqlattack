@@ -30,6 +30,10 @@ export const UsersDB: SampleDatabase = {
     return DATA;
   },
 
+  getReset() {
+    return '';
+  },
+
   requirements(): SampleDatabaseRequirements {
     return {
       schema: true,

@@ -11,17 +11,21 @@ import {
     EvaluationTest,
   ResultRow,
   TaskSetupTuple
-} from '../../../TaskAggregate'
+} from '../../../objs/TaskAggregate'
+
+import { PreprocessorObject } from '../../../objs/Preprocess';
 
 const EvalInitState = function(
   tests: Array<EvaluationTest>) {
 
   const stateData = {
     test: '',
+    resetQuery: '',
+    preprocessObjs: [],
     oper: (() => { }) as any,
     rows: [] as Array<ResultRow>,
     columns: [] as ColumnNames,
-    extra: [] as Array<any>
+    extra: [] as Array<any>,
   };
 
   function expectedData(rows: Array<ResultRow>) {
@@ -110,6 +114,7 @@ const EvalTaskInitState = function(
 
   const stateData = {
     test: '',
+    resetQuery: '',
     oper: (() => { }) as any,
     rows: [] as Array<ResultRow>,
     columns: [] as ColumnNames,
@@ -155,6 +160,20 @@ const EvalTaskInitState = function(
     }
   }
 
+  
+  function selectStatementWithContains(query: string, msg: string='') {
+    const metaentry = {
+      query,
+      message: msg,
+      kind: 'SELECT_CONTAINS'
+    };
+    stateData.extra.push(metaentry);
+
+    return {
+      expectedData
+    }
+  }
+
   function insertStatement(table: string, columns: Array<string>) {
     const metaentry = {
       table, columns, values: [] as Array<Array<any>>,
@@ -169,7 +188,8 @@ const EvalTaskInitState = function(
       return {
         addValues,
         insertStatement,
-        selectStatement
+        selectStatement,
+        selectStatementWithContains,
       }
     }
     
@@ -211,6 +231,7 @@ const EvalTaskInitState = function(
 
           return {
             selectStatement,
+            selectStatementWithContains,
           }
         },
         constructionEval: () => {
@@ -220,6 +241,7 @@ const EvalTaskInitState = function(
             extra: extrafn,
             insertStatement,
             selectStatement,
+            selectStatementWithContains,
             expectedData
           }
         }
@@ -273,11 +295,20 @@ const NewTaskInit = function(task: any) {
                     database: function(db: string) {
                       task.database = db;
                       task.setup = [];
-                      return {
+                      const retObj = {
                         setup: function() {
                           return SetupFnInit(task);
+                        },
+                        setupWithReset: function(reset: string) {
+                          task.resetQuery = reset;
+                          return SetupFnInit(task);
+                        },
+                        preprocess: function(preprocessor: PreprocessorObject) {
+                          task.preprocessObjs.push(preprocessor);
+                          return retObj;
                         }
                       }
+                      return retObj;
                     }
                   }
                 }
@@ -301,8 +332,10 @@ export function NewTask() {
     key: '',
     scaffold: '',
     questionMd: '',
+    resetQuery: '',
     database: '',
     setup: [],
+    preprocessObjs: [],
     evaluation: {
       evalkind: [],
       evaldata: [],
