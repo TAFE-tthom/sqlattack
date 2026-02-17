@@ -22,9 +22,9 @@ import dql1json from './dql_01_data.json';
 import dql2json from './dql_02_data.json';
 import dql3json from './dql_03_data.json';
 import dql4json from './dql_04_data.json';
-import dql5json from './dql_04_data.json';
-import dql6json from './dql_04_data.json';
-import dql7json from './dql_04_data.json';
+import dql5json from './dql_05_data.json';
+import dql6json from './dql_06_data.json';
+import dql7json from './dql_07_data.json';
 
 
 // Exercises Batch
@@ -36,5 +36,4 @@ export const DQLExercises = {
   dql5, dql5json,
   dql6, dql6json,
   dql7, dql7json,
-  
 }

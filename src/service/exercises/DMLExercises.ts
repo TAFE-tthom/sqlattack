@@ -47,11 +47,11 @@ export const Exercises: ExercisePack = {
         .expectedData(DMLExercises.ex2data)
     .done(),
     NewTask()
-      .name("Update Products - 4")
+      .name("Update Products - 3")
       .key('dml03')
       .scaffold("-- Your Query Below --")
       .question(DMLExercises.ex3)
-      .database('update03')
+      .database('update03-fix1')
       .setup()
         .add({
             command: SqliteCommands.Exec,
