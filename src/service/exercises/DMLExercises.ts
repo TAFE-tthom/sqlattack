@@ -99,7 +99,7 @@ export const Exercises: ExercisePack = {
       .name("Deleting An Order - 5")
       .key('dml05')
       .scaffold("-- Your Query Below --")
-      .question(DMLExercises.ex4)
+      .question(DMLExercises.ex5)
       .database('delete05')
       .setup()
         .add({
@@ -123,7 +123,7 @@ export const Exercises: ExercisePack = {
       .name("Update Order - 6")
       .key('dml06')
       .scaffold("-- Your Query Below --")
-      .question(DMLExercises.ex4)
+      .question(DMLExercises.ex6)
       .database('update06')
       .setup()
         .add({
