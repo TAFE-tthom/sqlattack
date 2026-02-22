@@ -1,7 +1,9 @@
 ## Select - Actors called Allen - 6
 
 Retrieve all actors who have the last name of `ALLEN`,
-Please be mindful of the 
+Please be mindful of the capitalisation.
+
+Make sure you only out the `first_name` and `last_name` of each actor.
 
 ---
 

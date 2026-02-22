@@ -1,6 +1,6 @@
 ## Select - Films - 5
 
-Retrieve all films that have the word `Epic` in their description.
+Retrieve all films that have the word `Epic` in their description. Make sure you output the `film_id` and `title` only.
 
 ---
 

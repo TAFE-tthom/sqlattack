@@ -1,6 +1,6 @@
 import CodeMirror, { ViewUpdate } from '@uiw/react-codemirror'; 
-import { ReactElement } from 'preact/compat';
 import { EditorView } from '@uiw/react-codemirror';
+import { ReactElement } from 'preact/compat';
 import { loadLanguage, langs } from '@uiw/codemirror-extensions-langs';
 import { tokyoNight as THEME } from '@uiw/codemirror-themes-all';
 import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
